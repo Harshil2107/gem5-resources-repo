@@ -61,7 +61,7 @@ ln -s /usr/local/bin/gem5-bridge /usr/local/bin/m5
 rm -rf gem5
 echo "Done building and installing gem5-bridge (m5) and libm5"
 
-# You can extend this script to install your own packages here or by modifying the `x86-ubuntu.pkr.hcl` file.
+# You can extend this script to install your own packages here.
 
 # Disable network by default
 echo "Disabling network by default"

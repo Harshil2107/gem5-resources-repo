@@ -34,7 +34,7 @@ source "qemu" "initialize" {
                       "<wait>"
                       ]
   cpus             = "4"
-  disk_size        = "21000"
+  disk_size        = "4600"
   format           = "raw"
   headless         = "true"
   http_directory   = "http"
