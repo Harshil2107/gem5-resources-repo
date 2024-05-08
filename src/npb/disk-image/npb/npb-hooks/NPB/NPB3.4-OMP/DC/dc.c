@@ -92,9 +92,6 @@ void ShowADCPar(ADC_PAR *par);
 int32 DC(ADC_VIEW_PARS *adcpp);
 int Verify(long long int checksum,ADC_VIEW_PARS *adcpp);
 
-void roi_begin_();
-void roi_end_();
-
 #define BlockSize 1024
 
 int main ( int argc, char * argv[] )
@@ -202,9 +199,6 @@ int32 DC(ADC_VIEW_PARS *adcpp) {
               adcpp->nTasks);
    }
 
-#ifdef HOOKS
-   roi_begin_();
-#endif
 
 #pragma omp parallel shared(pvstp) private(itsk)
 #endif
@@ -259,10 +253,6 @@ int32 DC(ADC_VIEW_PARS *adcpp) {
      adccntlp->verificationFailed = 1;
    }
  } /* omp parallel */
-
-#ifdef HOOKS
-   roi_end_();
-#endif
 
    t_total=pvstp->tm_max;
 

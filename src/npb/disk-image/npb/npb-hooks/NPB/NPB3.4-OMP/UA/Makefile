@@ -11,6 +11,10 @@ OBJS = ua.o ua_data.o convect.o diffuse.o adapt.o move.o mason.o \
        precond.o utils.o verify.o setup.o transfer$(UXT).o \
        ${COMMON}/print_results.o ${COMMON}/timers.o ${COMMON}/wtime.o
 
+ifeq (${M5_ANNOTATION}, 1)
+	OBJS += ${COMMON}/hooks.o
+endif
+
 include ../sys/make.common
 
 # npbparams.h is included by ua_data module (via ua_data.o)

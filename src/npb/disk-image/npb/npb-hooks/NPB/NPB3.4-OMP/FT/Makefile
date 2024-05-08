@@ -10,6 +10,10 @@ include ../sys/make.common
 OBJS = ft.o ft_data.o ${COMMON}/${RAND}.o ${COMMON}/print_results.o \
        ${COMMON}/timers.o ${COMMON}/wtime.o
 
+ifeq (${M5_ANNOTATION}, 1)
+	OBJS += ${COMMON}/hooks.o
+endif
+
 ${PROGRAM}: config
 	@ver=$(VERSION); bfac=`echo $$ver|sed -e 's/^blk//' -e 's/^BLK//'`; \
 	if [ x$$ver != x$$bfac ] ; then		\

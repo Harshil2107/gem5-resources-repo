@@ -121,8 +121,8 @@
       if (timers_enabled) call timer_clear(3)
 !$omp end parallel
 
-#ifdef HOOKS
-      call roi_begin
+#ifdef M5_ANNOTATION
+      call m5_work_begin_interface
 #endif
       call timer_start(1)
 
@@ -219,12 +219,12 @@
  160  continue
 
       call timer_stop(1)
-      tm  = timer_read(1)
 
-#ifdef HOOKS
-      call roi_end
+#ifdef M5_ANNOTATION
+      call m5_work_end_interface
 #endif
 
+      tm  = timer_read(1)
       call verify(m, sx, sy, gc, verified, classv)
 
       nit=0

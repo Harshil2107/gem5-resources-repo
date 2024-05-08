@@ -231,13 +231,13 @@
       write( *,'(A,F15.3,A/)' )  &
      &     ' Initialization time: ',tinit, ' seconds'
 
-#ifdef HOOKS
-      call roi_begin
-#endif
-
       do i = T_bench, T_last
          call timer_clear(i)
       end do
+
+#ifdef M5_ANNOTATION
+         call m5_work_begin_interface
+#endif
 
       call timer_start(T_bench)
 
@@ -266,11 +266,11 @@
 
       call timer_stop(T_bench)
 
-      t = timer_read(T_bench)
-
-#ifdef HOOKS
-      call roi_end
+#ifdef M5_ANNOTATION
+      call m5_work_end_interface
 #endif
+
+      t = timer_read(T_bench)
 
       verified = .FALSE.
       verify_value = 0.0

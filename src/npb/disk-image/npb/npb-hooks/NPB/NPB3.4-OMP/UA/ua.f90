@@ -161,15 +161,14 @@
 
           call r_init(ta1,ntot,0.d0)
 
-#ifdef HOOKS
-       call roi_begin
-#endif
-
           time = 0.d0
           nelt_tot = 0.d0
           do i = 1, t_last
              if (i.ne.t_init) call timer_clear(i)
           end do
+#ifdef M5_ANNOTATION
+          call m5_work_begin_interface
+#endif
           call timer_start(1)
         endif
 
@@ -243,12 +242,12 @@
       end do
 
       call timer_stop(1)
-      tmax = timer_read(1)
 
-#ifdef HOOKS
-       call roi_end
+#ifdef M5_ANNOTATION
+      call m5_work_end_interface
 #endif
 
+      tmax = timer_read(1)
       call verify(class, verified)
 
 !.....compute millions of collocation points advanced per second.

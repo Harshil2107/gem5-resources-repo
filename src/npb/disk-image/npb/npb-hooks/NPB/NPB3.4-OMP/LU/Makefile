@@ -12,6 +12,10 @@ OBJS = lu.o lu_data.o read_input.o \
        pintgr.o verify.o ${COMMON}/print_results.o \
        ${COMMON}/timers.o ${COMMON}/wtime.o
 
+ifeq (${M5_ANNOTATION}, 1)
+	OBJS += ${COMMON}/hooks.o
+endif
+
 include ../sys/make.common
 
 # npbparams.h is included by lu_data module (via lu_data.o)

@@ -99,8 +99,8 @@
       do i = 1, t_max
          call timer_clear(i)
       end do
-#ifdef HOOKS
-      call roi_begin
+#ifdef M5_ANNOTATION
+      call m5_work_begin_interface
 #endif
 
       call timer_start(T_total)
@@ -134,12 +134,12 @@
       call verify(nx, ny, nz, niter, verified, class)
 
       call timer_stop(t_total)
-      total_time = timer_read(t_total)
 
-#ifdef HOOKS
-      call roi_end
+#ifdef M5_ANNOTATION
+      call m5_work_end_interface
 #endif
 
+      total_time = timer_read(t_total)
       if( total_time .ne. 0. ) then
          mflops = 1.0d-6*ntotal_f *  &
      &             (14.8157+7.19641*log(ntotal_f)  &

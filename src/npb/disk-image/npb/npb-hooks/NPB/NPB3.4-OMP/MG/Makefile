@@ -7,6 +7,10 @@ include ../config/make.def
 OBJS = mg.o mg_data.o ${COMMON}/print_results.o  \
        ${COMMON}/${RAND}.o ${COMMON}/timers.o ${COMMON}/wtime.o
 
+ifeq (${M5_ANNOTATION}, 1)
+	OBJS += ${COMMON}/hooks.o
+endif
+
 include ../sys/make.common
 
 ${PROGRAM}: config ${OBJS}

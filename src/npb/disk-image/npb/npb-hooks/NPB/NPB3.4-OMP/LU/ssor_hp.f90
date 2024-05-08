@@ -53,6 +53,11 @@
       do i = 1, t_last
          call timer_clear(i)
       end do
+
+#ifdef M5_ANNOTATION
+      call m5_work_begin_interface
+#endif
+
       call timer_start(1)
  
 !---------------------------------------------------------------------
@@ -228,6 +233,11 @@
   900 continue
  
       call timer_stop(1)
+
+#ifdef M5_ANNOTATION
+      call m5_work_end_interface
+#endif
+
       maxtime= timer_read(1)
  
 

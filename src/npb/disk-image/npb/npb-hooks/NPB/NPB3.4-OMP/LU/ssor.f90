@@ -53,6 +53,13 @@
       do i = 1, t_last
          call timer_clear(i)
       end do
+
+if (niter > 1) then
+#ifdef M5_ANNOTATION
+      call m5_work_begin_interface
+#endif
+endif
+
       call timer_start(1)
  
 !---------------------------------------------------------------------
@@ -239,6 +246,12 @@
   900 continue
  
       call timer_stop(1)
+
+if (niter > 1) then
+#ifdef M5_ANNOTATION
+      call m5_work_end_interface
+#endif
+endif
       maxtime= timer_read(1)
  
 

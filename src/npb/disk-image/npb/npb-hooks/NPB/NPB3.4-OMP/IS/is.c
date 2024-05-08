@@ -64,6 +64,10 @@
 /* Uncomment below for cyclic schedule */
 /*#define SCHED_CYCLIC*/
 
+#ifdef M5_ANNOTATION
+void m5_work_begin_interface_();
+void m5_work_end_interface_();
+#endif
 
 /******************/
 /* default values */
@@ -270,8 +274,6 @@ void c_print_results( char   *name,
 
 #include "../common/c_timers.h"
 
-void roi_begin_();
-void roi_end_();
 
 /*
  *    FUNCTION RANDLC (X, A)
@@ -955,12 +957,12 @@ int main( int argc, char **argv )
 
     if( CLASS != 'S' ) printf( "\n   iteration\n" );
 
+#ifdef M5_ANNOTATION
+    m5_work_begin_interface_();
+#endif
 /*  Start timer  */
     timer_start( 0 );
 
-#ifdef HOOKS
-       roi_begin_();
-#endif
 
 /*  This is the main iteration */
     for( iteration=1; iteration<=MAX_ITERATIONS; iteration++ )
@@ -972,12 +974,12 @@ int main( int argc, char **argv )
 
 /*  End of timing, obtain maximum time of all processors */
     timer_stop( 0 );
-    timecounter = timer_read( 0 );
 
-#ifdef HOOKS
-       roi_end_();
+#ifdef M5_ANNOTATION
+    m5_work_end_interface_();
 #endif
 
+    timecounter = timer_read( 0 );
 /*  This tests that keys are in sequence: sorting of last ranked key seq
     occurs here, but is an untimed operation                             */
     if (timer_on) timer_start( 2 );

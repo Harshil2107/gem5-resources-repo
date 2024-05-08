@@ -13,6 +13,10 @@ OBJS = sp.o sp_data.o initialize.o exact_solution.o exact_rhs.o \
        z_solve$(BLK).o tzetar.o add.o txinvr.o error.o verify.o  \
        ${COMMON}/print_results.o ${COMMON}/timers.o ${COMMON}/wtime.o
 
+ifeq (${M5_ANNOTATION}, 1)
+	OBJS += ${COMMON}/hooks.o
+endif
+
 include ../sys/make.common
 
 # npbparams.h is included by sp_data module (via sp_data.o)

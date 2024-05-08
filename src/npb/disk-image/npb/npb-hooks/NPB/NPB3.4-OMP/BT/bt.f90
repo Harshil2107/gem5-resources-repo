@@ -143,13 +143,14 @@
        call adi
        call initialize
 
-#ifdef HOOKS
-       call roi_begin
-#endif
-
        do i = 1, t_last
           call timer_clear(i)
        end do
+
+#ifdef M5_ANNOTATION
+       call m5_work_begin_interface
+#endif
+
        call timer_start(1)
 
        do  step = 1, niter
@@ -165,12 +166,12 @@
        end do
 
        call timer_stop(1)
-       tmax = timer_read(1)
 
-#ifdef HOOKS
-       call roi_end
+#ifdef M5_ANNOTATION
+       call m5_work_end_interface
 #endif
 
+       tmax = timer_read(1)
        call verify(niter, class, verified)
 
        n3 = dble(grid_points(1))*grid_points(2)*grid_points(3)

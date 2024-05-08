@@ -279,8 +279,8 @@
       write (*, 2000) timer_read(T_init)
  2000 format(' Initialization time = ',f15.3,' seconds')
 
-#ifdef HOOKS
-      call roi_begin
+#ifdef M5_ANNOTATION
+      call m5_work_begin_interface
 #endif
       call timer_start( T_bench )
 
@@ -343,12 +343,13 @@
 
       call timer_stop( T_bench )
 
+#ifdef M5_ANNOTATION
+      call m5_work_end_interface
+#endif
+
 !---------------------------------------------------------------------
 !  End of timed section
 !---------------------------------------------------------------------
-#ifdef HOOKS
-      call roi_end
-#endif
 
       t = timer_read( T_bench )
 

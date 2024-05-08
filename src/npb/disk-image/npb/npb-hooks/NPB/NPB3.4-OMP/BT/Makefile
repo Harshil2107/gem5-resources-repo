@@ -13,6 +13,10 @@ OBJS = bt.o bt_data.o initialize.o exact_solution.o \
        z_solve$(BLK).o add.o error.o verify.o work_lhs$(BLK).o \
        ${COMMON}/print_results.o ${COMMON}/timers.o ${COMMON}/wtime.o
 
+ifeq (${M5_ANNOTATION}, 1)
+	OBJS += ${COMMON}/hooks.o
+endif
+
 include ../sys/make.common
 
 # npbparams.h is included by bt_data module (via bt_data.o)
