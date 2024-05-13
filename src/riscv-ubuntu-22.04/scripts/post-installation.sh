@@ -19,7 +19,7 @@ echo "Installing the gem5 init script in /sbin"
 mv /home/gem5/gem5_init.sh /sbin
 mv /sbin/init /sbin/init.old
 ln -s /sbin/gem5_init.sh /sbin/init
-
+chmod +x /sbin/gem5_init.sh
 # Add after_boot.sh to bashrc in the gem5 user account
 # This will run the script after the user automatically logs in
 echo -e "\nif [ -z \"\$AFTER_BOOT_EXECUTED\" ]; then\n   export AFTER_BOOT_EXECUTED=1\n    /home/gem5/after_boot.sh\nfi\n" >> /home/gem5/.bashrc
@@ -38,13 +38,13 @@ git sparse-checkout add util/m5
 git sparse-checkout add include
 git checkout
 # Install the headers globally so that other benchmarks can use them
-cp -r include/gem5 /usr/local/include/\
+cp -r include/gem5 /usr/local/include/
 
 # Build the library and binary
 pushd util/m5
-scons build/arm64/out/m5
-cp build/arm64/out/m5 /usr/local/bin/
-cp build/arm64/out/libm5.a /usr/local/lib/
+scons riscv.CROSS_COMPILE='' build/riscv/out/m5
+cp build/riscv/out/m5 /usr/local/bin/
+cp build/riscv/out/libm5.a /usr/local/lib/
 popd
 popd
 

@@ -32,5 +32,5 @@ if [[ $no_systemd == false ]]; then
 else
     # Directly log in as the gem5 user
     printf "Dropping to shell as gem5 user...\n"
-    exec su - ubuntu
+    exec su - gem5
 fi
