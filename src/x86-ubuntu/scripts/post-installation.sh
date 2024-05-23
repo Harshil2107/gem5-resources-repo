@@ -34,14 +34,14 @@ rm /etc/update-motd.d/*
 echo "Building and installing gem5-bridge (m5) and libm5"
 
 # Just get the files we need
-git clone https://github.com/gem5/gem5.git --depth=1 --filter=blob:none --no-checkout --sparse --single-branch --branch=stable
+git clone https://github.com/Harshil2107/gem5.git --depth=1 --filter=blob:none --no-checkout --sparse --single-branch --branch=update-m5
 pushd gem5
 # Checkout just the files we need
 git sparse-checkout add util/m5
 git sparse-checkout add include
 git checkout
 # Install the headers globally so that other benchmarks can use them
-cp -r include/gem5 /usr/local/include/\
+cp -r include/gem5 /usr/local/include/
 
 # Build the library and binary
 pushd util/m5
