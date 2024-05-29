@@ -77,4 +77,9 @@ build {
     scripts         = ["scripts/post-installation.sh"]
   }
 
+  provisioner "file" {
+  source      = "/home/gem5/vmlinux-x86-5.15.0-107-generic"
+  destination = "./disk-image/vmlinux-x86-5.15.0-107-generic"
+  direction   = "download"
+  }
 }

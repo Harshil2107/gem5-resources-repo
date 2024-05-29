@@ -18,6 +18,13 @@ apt-get install -y build-essential
 echo "Installing serial service for autologin after systemd"
 mv /home/gem5/serial-getty@.service /lib/systemd/system/
 
+# Make sure the headers are installed to extract the kernel that DKMS
+# packages will be built against.
+sudo apt -y install "linux-headers-$(uname -r)" "linux-modules-extra-$(uname -r)"
+
+echo "Extracting linux kernel"
+sudo bash -c "/usr/src/linux-headers-$(uname -r)/scripts/extract-vmlinux /boot/vmlinuz-$(uname -r) > /home/gem5/vmlinux-x86-$(uname -r)"
+
 echo "Installing the gem5 init script in /sbin"
 mv /home/gem5/gem5_init.sh /sbin
 mv /sbin/init /sbin/init.old
