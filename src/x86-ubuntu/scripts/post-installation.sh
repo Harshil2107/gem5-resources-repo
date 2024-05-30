@@ -23,7 +23,7 @@ mv /home/gem5/serial-getty@.service /lib/systemd/system/
 sudo apt -y install "linux-headers-$(uname -r)" "linux-modules-extra-$(uname -r)"
 
 echo "Extracting linux kernel"
-sudo bash -c "/usr/src/linux-headers-$(uname -r)/scripts/extract-vmlinux /boot/vmlinuz-$(uname -r) > /home/gem5/vmlinux-x86-$(uname -r)"
+sudo bash -c "/usr/src/linux-headers-$(uname -r)/scripts/extract-vmlinux /boot/vmlinuz-$(uname -r) > /home/gem5/vmlinux-x86-ubuntu"
 
 echo "Installing the gem5 init script in /sbin"
 mv /home/gem5/gem5_init.sh /sbin

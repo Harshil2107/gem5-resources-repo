@@ -79,8 +79,8 @@ build {
   }
 
   provisioner "file" {
-  source      = "/home/gem5/vmlinux-x86-6.8.0-31-generic"
-  destination = "./disk-image-ubuntu-24-04/vmlinux-x86-6.8.0-31-generic"
+  source      = "/home/gem5/vmlinux-x86-ubuntu"
+  destination = "./disk-image-ubuntu-24-04/vmlinux-x86-ubuntu"
   direction   = "download"
   }
 }
