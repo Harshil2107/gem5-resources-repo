@@ -23,6 +23,14 @@ You will see `qemu.initialize: Waiting for SSH to become available...` while the
 You can watch the installation with a VNC viewer.
 See [Troubleshooting](#troubleshooting) for more information.
 
+## Kernel
+
+A kernel is also extracted from the diskimage during the post-installation process.
+The latest headers and modules are installed using apt, before extracting the kernel using the `extract-vmlinux` script provided in ubuntu. The extracted kernel is placed at `/home/gem5/vmlinux-x86-ubuntu`.
+The extracted kernel does not have a version its name, but the kernel version is printed as before the extraction in `post-installation.sh` script. This extracted kernel can be used as a resource for gem5 simulations and is not limited to just be used with this diskiamge.
+
+The kernel is extracted using packer's file provisioner with `disrection=download` which would copy a file from the image to the host machine. The path specifying in the provisioner copies the file `/home/gem5/vmlinux-x86-ubuntu` to the output directory `disk-image`.
+
 ## Changes from the base Ubuntu 22.04 image
 
 - The default user is `gem5` with password `12345`.
