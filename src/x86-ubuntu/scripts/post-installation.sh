@@ -82,5 +82,8 @@ elif [ -f /etc/netplan/00-installer-config.yaml ]; then
     mv /etc/netplan/00-installer-config.yaml /etc/netplan/00-installer-config.yaml.bak
     netplan apply
 fi
+# Disable systemd service that waits for network to be online
+systemctl disable systemd-networkd-wait-online.service
+systemctl mask systemd-networkd-wait-online.service
 
 echo "Post Installation Done"

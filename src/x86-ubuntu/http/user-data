@@ -30,6 +30,7 @@ autoinstall:
     ethernets:
       ens3:
         dhcp4: true
+        optional: true
     version: 2
   source:
     id: ubuntu-server-minimal
