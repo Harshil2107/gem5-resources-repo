@@ -25,11 +25,11 @@ See [Troubleshooting](#troubleshooting) for more information.
 
 ## Kernel
 
-A kernel is also extracted from the diskimage during the post-installation process.
+A kernel is also extracted from the disk image during the post-installation process.
 The latest headers and modules are installed using apt, before extracting the kernel using the `extract-vmlinux` script provided in ubuntu. The extracted kernel is placed at `/home/gem5/vmlinux-x86-ubuntu`.
-The extracted kernel does not have a version its name, but the kernel version is printed as before the extraction in `post-installation.sh` script. This extracted kernel can be used as a resource for gem5 simulations and is not limited to just be used with this diskiamge.
+The extracted kernel does not have a version its name, but the kernel version is printed as before the extraction in `post-installation.sh` script. This extracted kernel can be used as a resource for gem5 simulations and is not limited to just be used with this disk image.
 
-The kernel is extracted using packer's file provisioner with `disrection=download` which would copy a file from the image to the host machine. The path specifying in the provisioner copies the file `/home/gem5/vmlinux-x86-ubuntu` to the output directory `disk-image`.
+The kernel is extracted using packer's file provisioner with `direction=download` which would copy a file from the image to the host machine. The path specifying in the provisioner copies the file `/home/gem5/vmlinux-x86-ubuntu` to the output directory `disk-image`.
 
 ## Changes from the base Ubuntu 22.04 image
 
@@ -43,8 +43,11 @@ The kernel is extracted using packer's file provisioner with `disrection=downloa
   - The `gem5-bridge exit` command is run after the linux kernel initialization by default.
   - If the `no_systemd` boot option is passed, systemd is not run and the user is dropped to a terminal.
   - If the `interactive` boot option is passed, the `gem5-bridge exit` command is not run after the linux kernel initialization.
-- Networking is disabled by moving the `/etc/netplan/00-installer-config.yaml` file to `/etc/netplan/00-installer-config.yaml.bak`.
+- Networking is disabled by moving the `/etc/netplan/00-installer-config.yaml` file to `/etc/netplan/00-installer-config.yaml.bak`. The `systemd-networkd-wait-online.service` is also disabled.
   - If you want to enable networking, you need to modify the disk image and move the file `/etc/netplan/00-installer-config.yaml.bak` to `/etc/netplan/00-installer-config.yaml`.
+  To re-enable `systemd-networkd-wait-online.service`, first, unmask the service with `sudo systemctl unmask systemd-networkd-wait-online.service` and then enable the service to start with `sudo systemctl enable systemd-networkd-wait-online.service`.
+  If you require the service to start immediately without waiting for the next boot then also run the following:
+  `sudo systemctl start systemd-networkd-wait-online.service`.
 
 ## Extending the Disk Image
 
