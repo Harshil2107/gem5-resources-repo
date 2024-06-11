@@ -11,6 +11,10 @@ if [ ! -f ./packer ]; then
     rm packer_${PACKER_VERSION}_linux_amd64.zip;
 fi
 
+
+wget https://old-releases.ubuntu.com/releases/jammy/ubuntu-22.04.3-preinstalled-server-riscv64+unmatched.img.xz
+unxz ubuntu-22.04.3-preinstalled-server-riscv64+unmatched.img.xz
+
 # Install the needed plugins
 ./packer init riscv-ubuntu.pkr.hcl
 

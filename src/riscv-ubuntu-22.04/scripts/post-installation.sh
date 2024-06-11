@@ -15,6 +15,26 @@ apt-get install -y build-essential
 echo "Installing serial service for autologin after systemd"
 mv /home/gem5/serial-getty@.service /lib/systemd/system/
 
+# Backup the current /etc/fstab
+cp /etc/fstab /etc/fstab.backup
+
+# Ensure the root filesystem does not remount as read-only on errors
+sed -i 's/\(LABEL=cloudimg-rootfs.*\)errors=remount-ro\(.*\)/\1 \2/' /etc/fstab
+
+# Comment out the mounting of the /boot/efi partition
+sed -i '/\/boot\/efi/s/^/#/' /etc/fstab
+
+# Optional: Display /etc/fstab to verify changes
+cat /etc/fstab
+
+systemctl disable boot-efi.mount
+systemctl mask boot-efi.mount
+systemctl daemon-reload
+
+# Giving execute permissions to the after_boot.sh script
+chmod 4577 /home/gem5/after_boot.sh
+chmod u+s /home/gem5/after_boot.sh
+
 echo "Installing the gem5 init script in /sbin"
 mv /home/gem5/gem5_init.sh /sbin
 mv /sbin/init /sbin/init.old
@@ -67,6 +87,9 @@ echo "Done building and installing gem5-bridge (m5) and libm5"
 echo "Disabling network by default"
 echo "See README.md for instructions on how to enable network"
 mv /etc/netplan/50-cloud-init.yaml /etc/netplan/50-cloud-init.yaml.bak
-netplan apply
+# netplan apply
 
+# Disable systemd service that waits for network to be online
+systemctl disable systemd-networkd-wait-online.service
+systemctl mask systemd-networkd-wait-online.service
 echo "Post Installation Done"

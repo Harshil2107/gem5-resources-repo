@@ -30,21 +30,21 @@ source "qemu" "initialize" {
   disk_image       = "true"
   http_directory   = "http"
   boot_command = [
-                  "<wait90>",
+                  "<wait120>",
                   "ubuntu<enter><wait>",
                   "ubuntu<enter><wait>",
                   "ubuntu<enter><wait>",
                   "12345678<enter><wait>",
                   "12345678<enter><wait>",
                   "<wait20>",
-                  "sudo adduser gem5<enter><wait>",
-                  "12345<enter><wait>",
-                  "12345<enter><wait>",
+                  "sudo adduser gem5<enter><wait10>",
+                  "12345<enter><wait10>",
+                  "12345<enter><wait10>",
                   "<enter><enter><enter><enter><enter>y<enter><wait>",
                   "sudo usermod -aG sudo gem5<enter><wait>"
                 ]
-  iso_checksum     = "sha256:0363f6fceef18dfc106379a7487af6648dfc7540423d57a36080d9fc53633dcf"
-  iso_urls         = ["/home/harshilp/forks/gem5-resources-repo/fresh-riscv-img.img"]
+  iso_checksum     = "sha256:32bb0ec61ed38998100ee25934b5c37da345708a09e1dd0d99c0a8a2da0739de"
+  iso_urls         = ["./ubuntu-22.04.3-preinstalled-server-riscv64+unmatched.img"]
   memory           = "8192"
   output_directory = "disk-image"
   qemu_binary      = "/usr/bin/qemu-system-riscv64"
