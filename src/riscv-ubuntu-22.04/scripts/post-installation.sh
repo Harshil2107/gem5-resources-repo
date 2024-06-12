@@ -87,9 +87,9 @@ echo "Done building and installing gem5-bridge (m5) and libm5"
 echo "Disabling network by default"
 echo "See README.md for instructions on how to enable network"
 mv /etc/netplan/50-cloud-init.yaml /etc/netplan/50-cloud-init.yaml.bak
-# netplan apply
 
 # Disable systemd service that waits for network to be online
 systemctl disable systemd-networkd-wait-online.service
 systemctl mask systemd-networkd-wait-online.service
+
 echo "Post Installation Done"
