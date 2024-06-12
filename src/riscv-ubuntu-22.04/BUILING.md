@@ -70,10 +70,15 @@ To avoid its infinite execution, we incorporated a conditional check in `post-in
 
 ## Creating a Disk Image from Scratch
 
-### Using preinstalled image
+### Using a Preinstalled Image
 
-- **Using a base image**: As we don't have a live server install image for riscv, we used the preinstalled image provided by ubuntu.
-- **Acquire a base image with preinstalled ubuntu**: Get a preinstalled ubuntu image for riscv and add its path or url to `iso_url` and sha256 sum to `iso_checksum`. Also make sure that the block for `qemu` plugin has the flag `diskiamge` set to `true` as this flag lets the qemu plugin know that we are using a base image rather then an iso.
+- **Base Image Selection**: Since a live server install image for RISC-V is unavailable, utilize a preinstalled Ubuntu image for RISC-V. Specify the image path or URL in `iso_url` and its SHA256 checksum in `iso_checksum`. Ensure the `qemu` plugin configuration includes `diskimage` set to `true`, indicating the use of a preexisting disk image rather than an ISO.
+
+- **Boot Command Configuration**: The preinstalled disk images require a password reset upon first login. To automate this, use the following boot command sequence:
+  - `<wait120>`: Delays execution to allow the image to boot and reach the login prompt. Adjust the duration based on the host system's performance where Packer is running.
+  - Auto-login with the default `ubuntu` user and change its password to `12345678`.
+  - Create a new user `gem5` with a password `12345`.
+  - Grant sudo permissions to the `gem5` user.
 
 ### Configuration and Directory Structure
 
