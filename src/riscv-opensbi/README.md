@@ -101,17 +101,17 @@ The following commands download the linux kernel version 6.5.5 from `kernel.org`
 In the `riscv-opensbi/` folder,
 
 ```sh
-wget https://cdn.kernel.org/pub/linux/kernel/v6.x/linux-6.5.5.tar.xz
-tar xf linux-6.5.5.tar.xz
-mv linux-6.5.5 linux
+wget https://cdn.kernel.org/pub/linux/kernel/v6.x/linux-6.6.34.tar.xz
+tar xf linux-6.6.34.tar.xz
+mv linux-6.6.34 linux
 cd linux
 docker run -u $UID:$GID --volume $PWD:/workdir -w /workdir --rm -it gem5/riscv-gcc
-(docker) yes "" | make ARCH=riscv CROSS_COMPILE=riscv64-linux-gnu- oldconfig
+(docker) yes "" | make ARCH=riscv CROSS_COMPILE=riscv64-linux-gnu- config_with_gpu_numa.config
 (docker) make ARCH=riscv CROSS_COMPILE=riscv64-linux-gnu- -j$(nproc)
 (docker) exit
 ```
 
-The `yes "" | make ARCH=riscv CROSS_COMPILE=riscv64-linux-gnu- oldconfig` chooses all default options in the linux kernel configuration for RISC-V.
+The `yes "" | make ARCH=riscv CROSS_COMPILE=riscv64-linux-gnu- config_with_gpu_numa.config` chooses all default options in the linux kernel configuration for RISC-V.
 To change the configuration after that step, you can use `make ARCH=riscv CROSS_COMPILE=riscv64-linux-gnu- menuconfig`.
 
 The linux kernel is located at `linux/vmlinux`.

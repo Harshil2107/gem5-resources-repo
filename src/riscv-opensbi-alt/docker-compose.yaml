@@ -16,8 +16,6 @@ services:
     build:
       context: .
       dockerfile: Dockerfile-opensbi
-      platforms: 
-        - linux/riscv64
     platform: linux/riscv64
     volumes:
       - ./opensbi:/work
@@ -31,20 +29,18 @@ services:
       - ./:/work
     working_dir: /work/
     command: |
-      clone -c advice.detachedHead=false -b v6.5-rc5 --depth 1 --single-branch https://github.com/torvalds/linux.git
+      clone -c advice.detachedHead=false -b v6.6.33 --depth 1 --single-branch https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git
 
   config-linux:
     depends_on:
       - obtain-linux
-    build:
-      context: .
-      dockerfile: Dockerfile-linux
-      platforms:  [linux/riscv64]
+    image: alpine
     volumes:
-      - ./linux:/work
-    working_dir: /work/
-    platform: linux/riscv64
-    command: make defconfig
+      - ./:/work
+    working_dir: /work/linux
+    # Copy the custom kernel configuration to the appropriate place
+    command: |
+      cp /work/config_with_gpu_numa.config .config
 
   build-linux:
     depends_on:
@@ -53,7 +49,6 @@ services:
     build:
       context: .
       dockerfile: Dockerfile-linux
-      platforms:  [linux/riscv64]
     volumes:
       - ./linux:/work
     working_dir: /work/
