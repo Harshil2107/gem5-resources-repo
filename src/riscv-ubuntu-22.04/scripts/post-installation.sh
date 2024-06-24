@@ -15,17 +15,6 @@ apt-get install -y build-essential
 echo "Installing serial service for autologin after systemd"
 mv /home/gem5/serial-getty@.service /lib/systemd/system/
 
-# Backup the current /etc/fstab
-cp /etc/fstab /etc/fstab.backup
-
-# Ensure the root filesystem does not remount as read-only on errors
-sed -i 's/\(LABEL=cloudimg-rootfs.*\)errors=remount-ro\(.*\)/\1 \2/' /etc/fstab
-
-# Comment out the mounting of the /boot/efi partition
-sed -i '/\/boot\/efi/s/^/#/' /etc/fstab
-
-# Optional: Display /etc/fstab to verify changes
-cat /etc/fstab
 
 systemctl disable boot-efi.mount
 systemctl mask boot-efi.mount
@@ -91,5 +80,11 @@ mv /etc/netplan/50-cloud-init.yaml /etc/netplan/50-cloud-init.yaml.bak
 # Disable systemd service that waits for network to be online
 systemctl disable systemd-networkd-wait-online.service
 systemctl mask systemd-networkd-wait-online.service
+
+# Disable and mask cloud-init services
+echo "Disabling cloud-init services"
+# Disable systemd targets for cloud-init that wait for its completion
+systemctl disable cloud-init.target
+systemctl mask cloud-init.target
 
 echo "Post Installation Done"
