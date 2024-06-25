@@ -22,13 +22,36 @@ variable "ssh_username" {
   default = "gem5"
 }
 
+variable "ubuntu_version" {
+  type    = string
+  default = "22.04"
+  validation {
+    condition     = contains(["22.04", "24.04"], var.ubuntu_version)
+    error_message = "Ubuntu version must be either 22.04 or 24.04."
+  }
+}
+
+locals {
+  iso_data = {
+    "22.04" = {
+      iso_url       = "./ubuntu-22.04.3-preinstalled-server-riscv64+unmatched.img"
+      iso_checksum  = "sha256:b6fc820db60fb7b55dfff62afd70b4d65ca9aa5b61fc4cf16314cce36934baf5"
+      output_dir    = "disk-image"
+    }
+    "24.04" = {
+      iso_url       = "./ubuntu-24.04-preinstalled-server-riscv64.img"
+      iso_checksum  = "sha256:9f1010bfff3d3b2ed3b174f121c5b5002f76ae710a6647ebebbc1f7eb02e63f5"
+      output_dir    = "disk-image-24.04"
+    }
+  }
+}
+
 source "qemu" "initialize" {
   cpus             = "4"
   disk_size        = "5000"
   format           = "raw"
   headless         = "true"
   disk_image       = "true"
-  http_directory   = "http"
   boot_command = [
                   "<wait120>",
                   "ubuntu<enter><wait>",
@@ -43,10 +66,10 @@ source "qemu" "initialize" {
                   "<enter><enter><enter><enter><enter>y<enter><wait>",
                   "sudo usermod -aG sudo gem5<enter><wait>"
                 ]
-  iso_checksum     = "sha256:32bb0ec61ed38998100ee25934b5c37da345708a09e1dd0d99c0a8a2da0739de"
-  iso_urls         = ["./ubuntu-22.04.3-preinstalled-server-riscv64+unmatched.img"]
+  iso_checksum     = local.iso_data[var.ubuntu_version].iso_checksum
+  iso_urls         = [local.iso_data[var.ubuntu_version].iso_url]
   memory           = "8192"
-  output_directory = "disk-image"
+  output_directory = local.iso_data[var.ubuntu_version].output_dir
   qemu_binary      = "/usr/bin/qemu-system-riscv64"
 
   qemuargs       = [  ["-bios", "/usr/lib/riscv64-linux-gnu/opensbi/generic/fw_jump.elf"],
