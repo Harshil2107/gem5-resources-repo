@@ -51,7 +51,7 @@ F_INC =
 #---------------------------------------------------------------------------
 # Global *compile time* flags for Fortran programs
 #---------------------------------------------------------------------------
-FFLAGS	= -O3 -fopenmp -cpp -no-pie -DM5_ANNOTATION -DM5OP_ADDR=0xFFFF0000
+FFLAGS	= -O3 -fopenmp -cpp -no-pie -DM5_ANNOTATION
 
 #---------------------------------------------------------------------------
 # Global *link time* flags. Flags for increasing maximum executable
@@ -59,7 +59,7 @@ FFLAGS	= -O3 -fopenmp -cpp -no-pie -DM5_ANNOTATION -DM5OP_ADDR=0xFFFF0000
 #---------------------------------------------------------------------------
 # Using no-pie here as m5 is compiled with the no-pie flash and cant no be build
 # as a position independent executable.
-FLINKFLAGS = -O3 -fopenmp -no-pie -DM5_ANNOTATION
+FLINKFLAGS = -O3 -fopenmp -no-pie
 
 
 #---------------------------------------------------------------------------
@@ -111,7 +111,7 @@ C_INC =
 # _LARGEFILE64_SOURCE - are standard compiler flags which allow to work with
 # files larger than 2GB.
 #---------------------------------------------------------------------------
-CFLAGS	= -O3 -fopenmp -no-pie -DM5_ANNOTATION -DM5OP_ADDR=0xFFFF0000
+CFLAGS	= -O3 -fopenmp -no-pie -DM5_ANNOTATION
 
 #---------------------------------------------------------------------------
 # Global *link time* flags. Flags for increasing maximum executable
@@ -119,7 +119,7 @@ CFLAGS	= -O3 -fopenmp -no-pie -DM5_ANNOTATION -DM5OP_ADDR=0xFFFF0000
 #---------------------------------------------------------------------------
 # Using no-pie here as m5 is compiled with the no-pie flash and cant no be build
 # as a position independent executable.
-CLINKFLAGS = -O3 -fopenmp -no-pie -DM5_ANNOTATION
+CLINKFLAGS = -O3 -fopenmp -no-pie
 
 
 #---------------------------------------------------------------------------
