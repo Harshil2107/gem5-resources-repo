@@ -6,71 +6,112 @@ tags:
 permalink: resources/gapbs
 shortdoc: >
     This resource implementes the [GAP benchmark suite](http://gap.cs.berkeley.edu/benchmark.html).
-author: ["Marjan Fariborz"]
+author: ["Harshil Patel"]
 license: BSD-3-Clause
 ---
 
 This document provides instructions to create a GAP Benchmark Suite (GAPBS) disk image, which, along with an example script, may be used to run GAPBS within gem5 simulations. The example script uses a pre-built disk-image.
 
-A pre-built disk image, for X86, can be found, gzipped, here: <http://dist.gem5.org/dist/v22-1/images/x86/ubuntu-18-04/gapbs.img.gz>.
+A pre-built disk image, for X86, can be found, gzipped, here: <add link>
+
+## What's on the disk?
+
+- username: gem5
+- password: 12345
+
+- The `gem5-bridge`(m5) utility is installed in `/usr/local/bin/gem5-bridge`.
+- `libm5` is installed in `/usr/local/lib/`.
+- The headers for `libm5` are installed in `/usr/local/include/gem5-bridge`.
+- `gapbs` benchmark sutie with ROI annotations
+
+Thus, you should be able to build packages on the disk and easily link to the gem5-bridge library.
+
+The disk has network disabled by default to improve boot time in gem5.
+
+If you want to enable networking, you need to modify the disk image and move the file `/etc/netplan/00-installer-config.yaml.bak` to `/etc/netplan/00-installer-config.yaml`.
 
 ## Building the Disk Image
 
-Assuming that you are in the `src/gapbs/` directory, first create `m5` (which is needed to create the disk image):
+Assuming that you are in the `src/gapbs/` directory, run
 
 ```sh
-git clone https://gem5.googlesource.com/public/gem5
-cd gem5/util/m5
-scons build/x86/out/m5
-```
-
-To create the disk image you need to add the packer binary in the disk-image directory:
-
-```sh
-cd disk-image/
 ./build.sh          # the script downloading packer binary and building the disk image
 ```
 
-After this process succeeds, the disk image can be found on the `src/gapbs/disk-image/gapbs-image/gapbs`.
+After this process succeeds, the disk image can be found on the `src/gapbs/disk-image-ubuntu-24-04`.
 
-GAPBS disk image can support both real and synthetic graph inputs. The current pre-built disk image contains only one graph input which includes the New York city road map (with 733K nodes) it can be found: <http://users.diag.uniroma1.it/challenge9/download.shtml>.
+This gapbs image uses the prebuilt ubuntu 24.04 image as a base image. The gapbs image also throws the same exit events as the base image.
 
-To use other graphs simply copy the graph in the gapbs/ directory and add them to gapbs/gapbs.json.
+Each benchmark also has its regions of intrests annotated and they throw a `gem5-bridge workbegin` and `gem5-bridge workend` exit event.
 
-## Simulating GAPBS using an example script
+## Init Process and Exit Events
 
-An example script with a pre-configured system is available in the following directory within the gem5 repository:
+This section outlines the disk image's boot process variations and the impact of specific boot parameters on its behavior.
+By default, the disk image boots with systemd in a non-interactive mode.
+Users can adjust this behavior through kernel arguments at boot time, influencing the init system and session interactivity.
 
-```
-gem5/configs/example/gem5_library/x86-gapbs-benchmarks.py
-```
+### Boot Parameters
 
-The example script specifies a system with the following parameters:
+The disk image supports two main kernel arguments to adjust the boot process:
 
-* A `SimpleSwitchableProcessor` (`KVM` for startup and `TIMING` for ROI execution). There are 2 CPU cores, each clocked at 3 GHz.
-* 2 Level `MESI_Two_Level` cache with 32 kB L1I and L1D size, and, 256 kB L2 size. The L1 cache(s) has associativity of 8, and, the L2 cache has associativity 16. There are 2 L2 cache banks.
-* The system has 3 GB `SingleChannelDDR4_2400` memory.
-* The script uses `x86-linux-kernel-4.19.83` and `x86-gapbs`, the disk image created from following the instructions in this `README.md`.
+- `no_systemd=true`: Disables systemd as the init system, allowing the system to boot without systemd's management.
+- `interactive=true`: Enables interactive mode, presenting a shell prompt to the user for interactive session management.
 
-The example script must be run with the `X86` binary. To build:
+Combining these parameters yields four possible boot configurations:
 
-```sh
-git clone https://gem5.googlesource.com/public/gem5
-cd gem5
-scons build/X86/gem5.opt -j<proc>
-```
-Once compiled, you may use the example config file to run the GAPBS benchmark programs using the following command:
+1. **Default (Systemd, Non-Interactive)**: The system uses systemd for initialization and runs non-interactively.
+2. **Systemd and Interactive**: Systemd initializes the system, and the boot process enters an interactive mode, providing a user shell.
+3. **Without Systemd and Non-Interactive**: The system boots without systemd and proceeds non-interactively, executing predefined scripts.
+4. **Without Systemd and Interactive**: Boots without systemd and provides a shell for interactive use.
 
-```sh
-# In the gem5 directory
-build/X86/gem5.opt \
-configs/example/gem5_library/x86-gapbs-benchmarks.py \
---benchmark <benchmark_program> \
---synthetic <synthetic> \
---size <size_or_graph_name>
-```
+### Note on Print Statements and Exit Events
 
-Description of the three arguments, provided in the above command are:
-* **--benchmark**, which refers to one of 5 benchmark programs, provided in the GAP Benchmark Suite. These include `cc`, `bc`, `tc`, `pr` and `bfs`. For more information on the workloads can be found at <http://gap.cs.berkeley.edu/benchmark.html>.
-* **--synthetic** refers whether to use a synthetic or a real graph. It accepts a boolean value.
-* **--size**, which refers to either the size of a synthetic graph from 1 to 16 nodes, or, a real graph. The real graph included in the pre-built disk-image is `USA-road-d.NY.gr`. Note that `--synthetic True` and `--size USA-road-d.NY.gr` cannot be combined, and, vice versa for real graphs.
+- The bold points in the sequence descriptions are `printf` statements in the code, indicating key moments in the boot process.
+- The `**` symbols mark gem5 exit events, essential for simulation purposes, dictating system shutdown or reboot actions based on the configured scenario.
+
+### Boot Sequences
+
+#### Default Boot Sequence (Systemd, Non-Interactive)
+
+- Kernel output
+- **Kernel Booted print message** **
+- Running systemd print message
+- Systemd output
+- autologin
+- **Running after_boot script** **
+- Print indicating **non-interactive** mode
+- **Reading run script file**
+- Script output
+- Exit **
+
+#### With Systemd and Interactive
+
+- Kernel output
+- **Kernel Booted print message** **
+- Running systemd print message
+- Systemd output
+- autologin
+- **Running after_boot script** **
+- Shell
+
+#### Without Systemd and Non-Interactive
+
+- Kernel output
+- **Kernel Booted print message** **
+- autologin
+- **Running after_boot script** **
+- Print indicating **non-interactive** mode
+- **Reading run script file**
+- Script output
+- Exit **
+
+#### Without Systemd and Interactive
+
+- Kernel output
+- **Kernel Booted print message** **
+- autologin
+- **Running after_boot script** **
+- Shell
+
+This detailed overview provides a foundational understanding of how different boot configurations affect the system's initialization and mode of operation.
+By selecting the appropriate parameters, users can customize the boot process for diverse environments, ranging from automated setups to hands-on interactive sessions.
