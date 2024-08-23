@@ -20,7 +20,12 @@ Thus, you should be able to build packages on the disk and easily link to the ge
 
 The disk has network disabled by default to improve boot time in gem5.
 
-If you want to enable networking, you need to modify the disk image and move the file `/etc/netplan/00-installer-config.yaml.bak` or `/etc/netplan/50-cloud-init.yaml.bak` to `/etc/netplan/00-installer-config.yaml` or `/etc/netplan/50-cloud-init.yaml` depending on which config file the disk image contains.
+If you want to enable networking, you need to modify the disk image and move the file `/etc/netplan/00-installer-config.yaml.bak` or `/etc/netplan/50-cloud-init.yaml.bak` to `/etc/netplan/00-installer-config.yaml` or `/etc/netplan/50-cloud-init.yaml` depending on which config file the disk image contains. For example you can use the following commands to re-enable network:
+
+```sh
+sudo mv /etc/netplan/50-cloud-init.yaml.bak /etc/netplan/50-cloud-init.yaml
+sudo netplan apply
+```
 
 ### Installed packages
 
@@ -111,7 +116,7 @@ To run:
 
 ```sh
 scons build/X86/gem5.opt -j`nproc`
-./build/X86/gem5.opt configs/example/gem5_library/x86-ubuntu-run.py
+./build/ALL/gem5.opt configs/example/gem5_library/x86-ubuntu-run.py
 ```
 
 The second is `configs/example/gem5_library/x86-ubuntu-run-with-kvm.py`.
@@ -120,7 +125,7 @@ To run:
 
 ```sh
 scons build/X86/gem5.opt -j`nproc`
-./build/X86/gem5.opt configs/example/gem5_library/x86-ubuntu-run-with-kvm.py
+./build/ALL/gem5.opt configs/example/gem5_library/x86-ubuntu-run-with-kvm.py
 ```
 
 **Note:** the `x86-ubuntu-with-kvm.py` script requires a host machine with KVM to function correctly.
@@ -133,7 +138,7 @@ To run:
 
 ```sh
 scons build/ARM/gem5.opt -j `nproc`
-./build/ARM/gem5.opt configs/example/gem5_library/arm-ubuntu-run.py
+./build/ALL/gem5.opt configs/example/gem5_library/arm-ubuntu-run.py
 ```
 
 The second is `configs/example/gem5_library/arm-ubuntu-run-with-kvm.py`.
@@ -142,7 +147,7 @@ To run:
 
 ```sh
 scons build/ARM/gem5.opt -j `nproc`
-./build/ARM/gem5.opt configs/example/gem5_library/arm-ubuntu-run-with-kvm.py
+./build/ALL/gem5.opt configs/example/gem5_library/arm-ubuntu-run-with-kvm.py
 ```
 
 **Note:** the `arm-ubuntu-run-with-kvm.py` script requires a host machine with KVM to function correctly.

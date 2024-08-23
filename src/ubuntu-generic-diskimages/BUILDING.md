@@ -20,7 +20,6 @@ This image can be a 22.04 or 24.04 Ubuntu image.
 - `arm-disk-image-24.04`: Disk image output directory for arm ubuntu 24.04 image.
 - `arm-disk-image-22.04`: Disk image output directory for arm ubuntu 22.04 image.
 
-
 ## Disk Image
 
 Run `build-x86.sh` with the argument `22.04` or `24.04` to build the respective x86 disk image in the `ubuntu-generic-diskimages` directory.
@@ -59,11 +58,9 @@ The kernel is extracted using packer's file provisioner with `direction=download
   If you require the service to start immediately without waiting for the next boot then also run the following:
   `sudo systemctl start systemd-networkd-wait-online.service`.
 
-## Extending the Disk Image
-
 ### Customization of the boot Processes
 
-- **Replace `gem5_init.sh`**: This script is what executes as the Linux init process (pid=0) immediately after Linux boot. If you have a custom initialization script, replace the default `gem5_init.sh` in the packer file that you are using such as the `x86-ubuntu.pkr.hcl` and `post-installation.sh` to integrate your custom initialization process.
+- **`gem5_init.sh` replaces /sbin/init**: This script is what executes as the Linux init process (pid=0) immediately after Linux boot. This script adds an `gem5-bridge exit` when the file is executed. It also checks the `no_systemd` kernel arg to redirect to the user or boot with systemd.
 
 ### Details of the After-Boot Script
 
@@ -84,9 +81,9 @@ This ensures `after-boot.sh` runs only once per session by setting an environmen
   chmod u+s /path/to/gem5-bridge
   ```
 
-### Adding more libraries
+## Extending the disk image with custom files and scripts
 
-- You can add more libraries to the disk image by updating the `post-installation.sh` script.
+- You can add more packages to the disk image by updating the `post-installation.sh` script.
 - To add files from host to the disk image you can add a file provisioner with source as path in host and destination as path in the image.
 
 ```hcl
@@ -98,6 +95,10 @@ provisioner "file" {
 
 If you need to increase the size of the image when adding more libraries and files to the image update the size of partition in the respective `user-data` file. Also, update the `disk_size` parameter to be atleast one mega byte more than
 the size you defined in the `user-data` file.
+
+**NOTE:** You can extend this disk image by modifying the `post-installation.sh` script, but it requires building the image from scratch.
+
+To take a pre-built image and add new files or packages, see the post in gem5 discussion.
 
 ## Creating a Disk Image from Scratch
 
