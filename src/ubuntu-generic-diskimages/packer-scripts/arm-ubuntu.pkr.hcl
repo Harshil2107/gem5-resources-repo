@@ -69,14 +69,14 @@ locals {
     ["-device", "usb-kbd"],
   ]
 
-  qemuargs_kvm = local.qemuargs_base ++ [
+  qemuargs_kvm = concat(local.qemuargs_base,[
     ["-cpu", "host"],
     ["-enable-kvm"]
-  ]
+  ])
 
-  qemuargs_no_kvm = local.qemuargs_base ++ [
+  qemuargs_no_kvm = concat(local.qemuargs_base,[
     ["-cpu", "cortex-a57"]
-  ]
+  ])
 
   qemuargs = var.use_kvm == "true" ? local.qemuargs_kvm : local.qemuargs_no_kvm
 }
