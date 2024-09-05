@@ -11,7 +11,7 @@ This image can be a 22.04 or 24.04 Ubuntu image.
 
 - `files`: Files that are copied to the disk image.
 - `scripts`: Scripts run on the disk image after installation.
-- `http`: cloud-init Ubuntu autoinstall files for different versions of ubuntu for arm and x86.
+- `http`: cloud-init Ubuntu autoinstall files for different versions of Ubuntu for Arm and x86.
   - `arm-22-04`: cloud-init Ubuntu autoinstall files for arm ubuntu 22.04 image.
   - `arm-24-04`: cloud-init Ubuntu autoinstall files for arm ubuntu 24.04 image.
   - `x86`: cloud-init Ubuntu autoinstall files for x86 ubuntu 22.04 and 24.04 images.
@@ -25,7 +25,19 @@ This image can be a 22.04 or 24.04 Ubuntu image.
 Run `build-x86.sh` with the argument `22.04` or `24.04` to build the respective x86 disk image in the `ubuntu-generic-diskimages` directory.
 Run `build-arm.sh` with the argument `22.04` or `24.04` to build the respective arm disk image in the `ubuntu-generic-diskimages` directory.
 Building the arm image assume that we are on an ARM machine as we use kvm to build the image.
+You can also run the packer file with the "use_kvm=false" to build the disk image without KVM.
 This will download the packer binary, initialize packer, and build the disk image.
+
+## Arm image specific requirements
+
+We need a EFI file to boot the arm image. We use the file named `flash0.img` in the packer file.
+
+To get the `flash0.img` run the following commands in the `files` directory
+
+```bash
+dd if=/dev/zero of=flash0.img bs=1M count=64
+dd if=/usr/share/qemu-efi-aarch64/QEMU_EFI.fd of=flash0.img conv=notrunc
+```
 
 Note: This can take a while to run.
 You will see `qemu.initialize: Waiting for SSH to become available...` while the installation is running.
@@ -35,7 +47,7 @@ See [Troubleshooting](#troubleshooting) for more information.
 ## Kernel
 
 For the x86 disk images a kernel is also extracted from the disk image during the post-installation process.
-The latest headers and modules are installed using apt, before extracting the kernel using the `extract-vmlinux` script provided in ubuntu. The extracted kernel is placed at `/home/gem5/vmlinux-x86-ubuntu` in the disk image.
+The extracted kernel does not have a version in its name, but the kernel version is printed before the extraction in `post-installation.sh` script. This extracted kernel can be used as a resource for gem5 simulations and is not limited to just be used with this disk image.
 The extracted kernel does not have a version its name, but the kernel version is printed as before the extraction in `post-installation.sh` script. This extracted kernel can be used as a resource for gem5 simulations and is not limited to just be used with this disk image.
 
 The kernel is extracted using packer's file provisioner with `direction=download` which would copy a file from the image to the host machine. The path specifying in the provisioner copies the file `/home/gem5/vmlinux-x86-ubuntu` to the output directory `disk-image`.
@@ -53,6 +65,7 @@ The kernel is extracted using packer's file provisioner with `direction=download
   - If the `no_systemd` boot option is passed, systemd is not run and the user is dropped to a terminal.
   - If the `interactive` boot option is passed, the `gem5-bridge exit` command is not run after the linux kernel initialization.
 - Networking is disabled by moving the `/etc/netplan/00-installer-config.yaml` or `/etc/netplan/50-cloud-init.yaml` file to `/etc/netplan/00-installer-config.yaml.bak` or `/etc/netplan/50-cloud-init.yaml.bak` respectively. The `systemd-networkd-wait-online.service` is also disabled.
+The x86 22.04 image should have `00-installer-config.yaml` while all the other disk images should have `50-cloud-init.yaml`.
   - If you want to enable networking, you need to modify the disk image and move the file `/etc/netplan/00-installer-config.yaml.bak` or `/etc/netplan/50-cloud-init.yaml.bak` to `/etc/netplan/00-installer-config.yaml` or `/etc/netplan/50-cloud-init.yaml` depending on which config file the disk image contains.
   To re-enable `systemd-networkd-wait-online.service`, first, unmask the service with `sudo systemctl unmask systemd-networkd-wait-online.service` and then enable the service to start with `sudo systemctl enable systemd-networkd-wait-online.service`.
   If you require the service to start immediately without waiting for the next boot then also run the following:
@@ -93,12 +106,11 @@ provisioner "file" {
   }
 ```
 
-If you need to increase the size of the image when adding more libraries and files to the image update the size of partition in the respective `user-data` file. Also, update the `disk_size` parameter to be atleast one mega byte more than
-the size you defined in the `user-data` file.
+If you need to increase the size of the image when adding more libraries and files to the image update the size of the partition in the respective `http/*/user-data` file. Also, update the `disk_size` parameter in `post-installation.sh` to be at least one mega byte more than the size you defined in the `user-data` file.
 
 **NOTE:** You can extend this disk image by modifying the `post-installation.sh` script, but it requires building the image from scratch.
 
-To take a pre-built image and add new files or packages, see the post in gem5 discussion.
+To take a pre-built image and add new files or packages, take a look at the following [documentation](https://www.gem5.org/documentation/gem5-stdlib/extending-disk-images).
 
 ## Creating a Disk Image from Scratch
 
@@ -112,17 +124,6 @@ The `user-data` file in this repo, is made by selecting all default options exce
 
 - **Determine QEMU Arguments**: Identify the QEMU arguments required for booting the system. These vary by ISA and mirror the arguments used for booting a disk image in QEMU.
 - **Directory Organization**: Arrange your source directory to include the `user-data` file and any additional content. Utilize the `provisioner` section for transferring extra files into the disk image, ensuring all necessary resources are embedded within your custom disk image.
-
-## Arm image specific changes
-
-We need a EFI file to boot the arm image. We use the file named `flash0.img` in the packer file.
-
-To get the `flash0.img` run the following commands in the `files` directory
-
-```bash
-dd if=/dev/zero of=flash0.img bs=1M count=64
-dd if=/usr/share/qemu-efi-aarch64/QEMU_EFI.fd of=flash0.img conv=notrunc
-```
 
 ## Troubleshooting
 

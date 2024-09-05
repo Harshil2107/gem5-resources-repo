@@ -20,7 +20,8 @@ Thus, you should be able to build packages on the disk and easily link to the ge
 
 The disk has network disabled by default to improve boot time in gem5.
 
-If you want to enable networking, you need to modify the disk image and move the file `/etc/netplan/00-installer-config.yaml.bak` or `/etc/netplan/50-cloud-init.yaml.bak` to `/etc/netplan/00-installer-config.yaml` or `/etc/netplan/50-cloud-init.yaml` depending on which config file the disk image contains. For example you can use the following commands to re-enable network:
+If you want to enable networking, you need to modify the disk image and move the file `/etc/netplan/00-installer-config.yaml.bak` or `/etc/netplan/50-cloud-init.yaml.bak` to `/etc/netplan/00-installer-config.yaml` or `/etc/netplan/50-cloud-init.yaml` depending on which config file the disk image contains. The x86 ubuntu 22.04 image should have `/etc/netplan/00-installer-config.yaml` and the other images should have ``/etc/netplan/50-cloud-init.yaml`.
+For example you can use the following commands to re-enable network:
 
 ```sh
 sudo mv /etc/netplan/50-cloud-init.yaml.bak /etc/netplan/50-cloud-init.yaml
@@ -128,7 +129,24 @@ scons build/X86/gem5.opt -j`nproc`
 ./build/ALL/gem5.opt configs/example/gem5_library/x86-ubuntu-run-with-kvm.py
 ```
 
-**Note:** the `x86-ubuntu-with-kvm.py` script requires a host machine with KVM to function correctly.
+To use your local disk image you can use the `DiskImageResource` class from `resources.py` in gem5.
+Following is an example of how to use your local disk image in gem5:
+
+```python
+disk_img = DiskImageResource("/path/to/disk/image/directory/x86-disk-image-24-04/x86-ubuntu")
+board.set_kernel_disk_workload(
+        disk_image=disk_img,
+        kernel=obtain_resource("x86-linux-kernel-5.4.0-105-generic"),
+        kernel_args=[
+            "earlyprintk=ttyS0",
+            "console=ttyS0",
+            "lpj=7999923",
+            "root=/dev/sda2"
+        ]
+    )
+```
+
+**Note:** the `x86-ubuntu-with-kvm.py` script requires a x86 host machine with KVM to function correctly.
 
 The gem5 respository also has two example scripts that utilize the arm ubuntu 24.04 image.
 
@@ -150,7 +168,19 @@ scons build/ARM/gem5.opt -j `nproc`
 ./build/ALL/gem5.opt configs/example/gem5_library/arm-ubuntu-run-with-kvm.py
 ```
 
-**Note:** the `arm-ubuntu-run-with-kvm.py` script requires a host machine with KVM to function correctly.
+To use your local disk image you can use the `DiskImageResource` class from `resources.py` in gem5.
+Following is an example of how to use your local disk image in gem5:
+
+```python
+disk_img = DiskImageResource("/path/to/disk/image/directory/arm-disk-image-22-04/arm-ubuntu", root_partition="2")
+board.set_kernel_disk_workload(
+        disk_image=disk_img,
+        bootloader=obtain_resource("arm64-bootloader-foundation"),
+        kernel=obtain_resource("arm64-linux-kernel-5.15.36")
+    )
+```
+
+**Note:** the `arm-ubuntu-run-with-kvm.py` script requires an Arm host machine with KVM to function correctly.
 
 ## Building and modifying the disk image
 
