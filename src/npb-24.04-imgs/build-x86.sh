@@ -15,7 +15,7 @@ wget https://storage.googleapis.com/dist.gem5.org/dist/develop/images/x86/ubuntu
 gunzip x86-ubuntu-24-04-v2.gz
 
 # Install the needed plugins
-./packer init x86-ubuntu.pkr.hcl
+./packer init x86-npb.pkr.hcl
 
 # Build the image
-./packer build x86-ubuntu.pkr.hcl
+./packer build x86-npb.pkr.hcl

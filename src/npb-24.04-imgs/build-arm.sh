@@ -10,8 +10,8 @@ wget https://storage.googleapis.com/dist.gem5.org/dist/develop/images/arm/ubuntu
 gunzip arm-ubuntu-24.04-20240823.gz 
 
 # Install the needed plugins
-./packer init arm-ubuntu.pkr.hcl
+./packer init arm-npb.pkr.hcl
 
 # Build the image
-./packer build arm-ubuntu.pkr.hcl
+./packer build arm-npb.pkr.hcl
 

@@ -49,7 +49,7 @@ to build the x86 disk image or
 ```
 
 to run the arm disk image.
-After this process succeeds, the disk image can be found on the `src/npb-24.04-imgs/disk-image-x86-npb` or `src/npb-24.04-imgs/disk-image-arm-npb` repectively.
+After this process succeeds, the disk image can be found on the `npb-24.04-imgs/disk-image-x86-npb/disk-image-x86-npb` or `npb-24.04-imgs/disk-image-arm-npb/disk-image-arm-npb` repectively.
 
 This gapbs image uses the prebuilt ubuntu 24.04 image as a base image. The gapbs image also throws the same exit events as the base image.
 
