@@ -35,7 +35,8 @@ source "qemu" "initialize" {
   format           = "raw"
   headless         = "true"
   http_directory   = "http"
-  iso_checksum     = "sha256:5e38b55d57d94ff029719342357325ed3bda38fa80054f9330dc789cd2d43931"
+  iso_checksum     = "sha256:6cedf26ebf281b823b24722341d3a2ab1f1ba26b10b536916d3f23
+cf92a8f4b5 "
   iso_urls         = ["https://old-releases.ubuntu.com/releases/jammy/ubuntu-22.04.2-live-server-amd64.iso"]
   memory           = "8192"
   output_directory = "disk-image"
