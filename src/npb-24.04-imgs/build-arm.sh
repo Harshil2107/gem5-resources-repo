@@ -6,6 +6,13 @@ if [ ! -f ./packer ]; then
     rm packer_${PACKER_VERSION}_linux_arm64.zip;
 fi
 
+# make the flash0.sh file
+cd ./files
+dd if=/dev/zero of=flash0.img bs=1M count=64
+dd if=/usr/share/qemu-efi-aarch64/QEMU_EFI.fd of=flash0.img conv=notrunc
+cd ..
+
+# get the  base image from gem5 resoruces
 wget https://storage.googleapis.com/dist.gem5.org/dist/develop/images/arm/ubuntu-24-04/arm-ubuntu-24.04-20240823.gz
 gunzip arm-ubuntu-24.04-20240823.gz 
 
@@ -14,4 +21,3 @@ gunzip arm-ubuntu-24.04-20240823.gz
 
 # Build the image
 ./packer build arm-npb.pkr.hcl
-
