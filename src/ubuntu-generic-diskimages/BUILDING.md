@@ -39,7 +39,9 @@ dd if=/dev/zero of=flash0.img bs=1M count=64
 dd if=/usr/share/qemu-efi-aarch64/QEMU_EFI.fd of=flash0.img conv=notrunc
 ```
 
-Note: This can take a while to run.
+**Note**: The `build-arm.sh` will make this file for you.
+
+Note: Building the image can take a while to run.
 You will see `qemu.initialize: Waiting for SSH to become available...` while the installation is running.
 You can watch the installation with a VNC viewer.
 See [Troubleshooting](#troubleshooting) for more information.

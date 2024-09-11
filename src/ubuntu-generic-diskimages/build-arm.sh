@@ -29,6 +29,12 @@ if [[ "$ubuntu_version" != "22.04" && "$ubuntu_version" != "24.04" ]]; then
     exit 1
 fi
 
+# make the flash0.sh file
+cd ./files
+dd if=/dev/zero of=flash0.img bs=1M count=64
+dd if=/usr/share/qemu-efi-aarch64/QEMU_EFI.fd of=flash0.img conv=notrunc
+cd ..
+
 # Install the needed plugins
 ./packer init ./packer-scripts/arm-ubuntu.pkr.hcl
 
