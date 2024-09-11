@@ -1,5 +1,7 @@
 **packer
 **packer_*.zip
 packer_cache/
-disk-image/
-disk-image-ubuntu-24-04/
+x86-disk-image-22-04/
+x86-disk-image-24-04/
+arm-disk-image-22-04/
+arm-disk-image-24-04/

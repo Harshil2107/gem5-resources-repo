@@ -121,12 +121,12 @@ build {
 
   provisioner "file" {
     destination = "/home/gem5/"
-    source      = "files/gem5_init.sh"
+    source      = "files/arm/gem5_init.sh"
   }
 
   provisioner "file" {
     destination = "/home/gem5/"
-    source      = "files/after_boot.sh"
+    source      = "files/arm/after_boot.sh"
   }
 
   provisioner "file" {

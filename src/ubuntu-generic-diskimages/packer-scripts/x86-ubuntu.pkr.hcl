@@ -36,12 +36,12 @@ locals {
     "22.04" = {
       iso_url       = "https://old-releases.ubuntu.com/releases/jammy/ubuntu-22.04.2-live-server-amd64.iso"
       iso_checksum  = "sha256:5e38b55d57d94ff029719342357325ed3bda38fa80054f9330dc789cd2d43931"
-      output_dir    = "x86-disk-image-22.04"
+      output_dir    = "x86-disk-image-22-04"
     }
     "24.04" = {
       iso_url       = "https://releases.ubuntu.com/releases/noble/ubuntu-24.04-live-server-amd64.iso"
       iso_checksum  = "sha256:8762f7e74e4d64d72fceb5f70682e6b069932deedb4949c6975d0f0fe0a91be3"
-      output_dir    = "x86-disk-image-24.04"
+      output_dir    = "x86-disk-image-24-04"
     }
   }
 }
@@ -83,12 +83,12 @@ build {
 
   provisioner "file" {
     destination = "/home/gem5/"
-    source      = "files/gem5_init.sh"
+    source      = "files/x86/gem5_init.sh"
   }
 
   provisioner "file" {
     destination = "/home/gem5/"
-    source      = "files/after_boot.sh"
+    source      = "files/x86/after_boot.sh"
   }
 
   provisioner "file" {
