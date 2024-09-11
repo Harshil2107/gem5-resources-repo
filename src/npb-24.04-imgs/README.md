@@ -36,6 +36,15 @@ If you want to enable networking, you need to modify the disk image and move the
 
 ## Building the Disk Image
 
+### Arm specific file requirement
+
+To get the `flash0.img` run the following commands in the `files` directory
+
+```bash
+dd if=/dev/zero of=flash0.img bs=1M count=64
+dd if=/usr/share/qemu-efi-aarch64/QEMU_EFI.fd of=flash0.img conv=notrunc
+```
+
 Assuming that you are in the `src/npb-24.04-imgs/` directory, run
 
 ```sh
