@@ -36,7 +36,7 @@ source "qemu" "initialize" {
   format           = "raw"
   headless         = "true"
   disk_image       = "true"
-  iso_checksum     = "sha256:77a84972c212564ae4174b71f8e1561add5aaef37e391d1904048e4bc41727d6"
+  iso_checksum     = "sha256:6cedf26ebf281b823b24722341d3a2ab1f1ba26b10b536916d3f23cf92a8f4b5"
   iso_urls         = ["./x86-ubuntu-24-04-v2"]
   memory           = "8192"
   output_directory = "disk-image-x86-npb"
