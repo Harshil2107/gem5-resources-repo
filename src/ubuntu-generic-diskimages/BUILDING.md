@@ -25,7 +25,7 @@ This image can be a 22.04 or 24.04 Ubuntu image.
 Run `build-x86.sh` with the argument `22.04` or `24.04` to build the respective x86 disk image in the `ubuntu-generic-diskimages` directory.
 Run `build-arm.sh` with the argument `22.04` or `24.04` to build the respective arm disk image in the `ubuntu-generic-diskimages` directory.
 Building the arm image assume that we are on an ARM machine as we use kvm to build the image.
-You can also run the packer file with the "use_kvm=false" to build the disk image without KVM.
+You can also run the packer file by adding the "use_kvm=false" in `build-arm.sh` in the `./packer build` command to build the disk image without KVM.
 This will download the packer binary, initialize packer, and build the disk image.
 
 ## Arm image specific requirements
