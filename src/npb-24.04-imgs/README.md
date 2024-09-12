@@ -32,7 +32,7 @@ Thus, you should be able to build packages on the disk and easily link to the ge
 
 The disk has network disabled by default to improve boot time in gem5.
 
-If you want to enable networking, you need to modify the disk image and move the file `/etc/netplan/50-cloud-init.yaml.bak` to `/etc/netplan/50-cloud-init.yaml.bak`.
+If you want to enable networking, you need to modify the disk image and move the file `/etc/netplan/50-cloud-init.yaml.bak` to `/etc/netplan/50-cloud-init.yaml`.
 
 ## Building the Disk Image
 
