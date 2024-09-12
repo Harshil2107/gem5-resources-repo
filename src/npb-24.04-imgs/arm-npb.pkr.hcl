@@ -46,7 +46,6 @@ source "qemu" "initialize" {
                         ["-enable-kvm"],
                         ["-machine", "virt"],
                         ["-machine", "gic-version=3"],
-                        ["-vga", "virtio"],
                         ["-device","virtio-gpu-pci"],
                         ["-device", "qemu-xhci"],
                         ["-device","usb-kbd"],
