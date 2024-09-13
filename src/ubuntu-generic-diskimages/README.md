@@ -14,7 +14,7 @@ The disk images are based on Ubuntu and support both x86 and ARM architectures, 
 
 - The `gem5-bridge`(m5) utility is installed in `/usr/local/bin/gem5-bridge`.
 - `libm5` is installed in `/usr/local/lib/`.
-- The headers for `libm5` are installed in `/usr/local/include/gem5-bridge`.
+- The headers for `libm5` are installed in `/usr/local/include/`.
 
 Thus, you should be able to build packages on the disk and easily link to the gem5-bridge library.
 
