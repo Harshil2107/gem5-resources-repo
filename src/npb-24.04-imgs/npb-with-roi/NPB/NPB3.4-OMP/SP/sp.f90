@@ -150,11 +150,12 @@
           call timer_clear(i)
        end do
 
+
+       call timer_start(1)
+
 #ifdef M5_ANNOTATION
        call m5_work_begin_interface
 #endif
-
-       call timer_start(1)
 
        do  step = 1, niter
 
@@ -167,11 +168,12 @@
 
        end do
 
-       call timer_stop(1)
-
 #ifdef M5_ANNOTATION
        call m5_work_end_interface
 #endif
+
+       call timer_stop(1)
+
 
        tmax = timer_read(1)
        call verify(niter, class, verified)

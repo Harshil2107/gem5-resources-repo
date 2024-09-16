@@ -957,12 +957,12 @@ int main( int argc, char **argv )
 
     if( CLASS != 'S' ) printf( "\n   iteration\n" );
 
-#ifdef M5_ANNOTATION
-    m5_work_begin_interface_();
-#endif
 /*  Start timer  */
     timer_start( 0 );
 
+#ifdef M5_ANNOTATION
+    m5_work_begin_interface_();
+#endif
 
 /*  This is the main iteration */
     for( iteration=1; iteration<=MAX_ITERATIONS; iteration++ )
@@ -971,13 +971,13 @@ int main( int argc, char **argv )
         rank( iteration );
     }
 
+#ifdef M5_ANNOTATION
+    m5_work_end_interface_();
+#endif
 
 /*  End of timing, obtain maximum time of all processors */
     timer_stop( 0 );
 
-#ifdef M5_ANNOTATION
-    m5_work_end_interface_();
-#endif
 
     timecounter = timer_read( 0 );
 /*  This tests that keys are in sequence: sorting of last ranked key seq

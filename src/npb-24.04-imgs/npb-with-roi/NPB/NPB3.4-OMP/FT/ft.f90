@@ -99,11 +99,13 @@
       do i = 1, t_max
          call timer_clear(i)
       end do
+
+      call timer_start(T_total)
+
 #ifdef M5_ANNOTATION
       call m5_work_begin_interface
 #endif
 
-      call timer_start(T_total)
       if (timers_enabled) call timer_start(T_setup)
 
       call compute_indexmap(twiddle, dims(1), dims(2), dims(3))
@@ -133,11 +135,12 @@
 
       call verify(nx, ny, nz, niter, verified, class)
 
-      call timer_stop(t_total)
-
 #ifdef M5_ANNOTATION
       call m5_work_end_interface
 #endif
+
+      call timer_stop(t_total)
+
 
       total_time = timer_read(t_total)
       if( total_time .ne. 0. ) then

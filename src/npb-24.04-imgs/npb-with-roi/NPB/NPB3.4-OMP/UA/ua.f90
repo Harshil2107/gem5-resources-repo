@@ -166,10 +166,13 @@
           do i = 1, t_last
              if (i.ne.t_init) call timer_clear(i)
           end do
+
+          call timer_start(1)
+
 #ifdef M5_ANNOTATION
           call m5_work_begin_interface
 #endif
-          call timer_start(1)
+
         endif
 
 !.......advance the convection step
@@ -241,11 +244,12 @@
         nelt_tot = nelt_tot + dble(nelt)
       end do
 
-      call timer_stop(1)
-
 #ifdef M5_ANNOTATION
       call m5_work_end_interface
 #endif
+
+      call timer_stop(1)
+
 
       tmax = timer_read(1)
       call verify(class, verified)

@@ -235,11 +235,12 @@
          call timer_clear(i)
       end do
 
+
+      call timer_start(T_bench)
+
 #ifdef M5_ANNOTATION
          call m5_work_begin_interface
 #endif
-
-      call timer_start(T_bench)
 
       if (timeron) call timer_start(T_resid2)
       call resid(u,v,r,n1,n2,n3,a,k)
@@ -264,11 +265,12 @@
 
       call norm2u3(r,n1,n2,n3,rnm2,rnmu,nx(lt),ny(lt),nz(lt))
 
-      call timer_stop(T_bench)
-
 #ifdef M5_ANNOTATION
       call m5_work_end_interface
 #endif
+
+      call timer_stop(T_bench)
+
 
       t = timer_read(T_bench)
 

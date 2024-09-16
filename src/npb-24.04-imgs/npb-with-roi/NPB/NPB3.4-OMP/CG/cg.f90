@@ -279,10 +279,11 @@
       write (*, 2000) timer_read(T_init)
  2000 format(' Initialization time = ',f15.3,' seconds')
 
+      call timer_start( T_bench )
+
 #ifdef M5_ANNOTATION
       call m5_work_begin_interface
 #endif
-      call timer_start( T_bench )
 
 !---------------------------------------------------------------------
 !---->
@@ -341,11 +342,12 @@
 
       enddo                              ! end of main iter inv pow meth
 
-      call timer_stop( T_bench )
-
 #ifdef M5_ANNOTATION
       call m5_work_end_interface
 #endif
+
+      call timer_stop( T_bench )
+
 
 !---------------------------------------------------------------------
 !  End of timed section

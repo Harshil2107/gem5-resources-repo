@@ -54,12 +54,11 @@
          call timer_clear(i)
       end do
 
+
+      call timer_start(1)
 #ifdef M5_ANNOTATION
       call m5_work_begin_interface
 #endif
-
-      call timer_start(1)
- 
 !---------------------------------------------------------------------
 !   the timestep loop
 !---------------------------------------------------------------------
@@ -231,12 +230,13 @@
  
       end do
   900 continue
- 
-      call timer_stop(1)
 
 #ifdef M5_ANNOTATION
       call m5_work_end_interface
 #endif
+
+      call timer_stop(1)
+
 
       maxtime= timer_read(1)
  
