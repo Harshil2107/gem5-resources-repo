@@ -19,7 +19,7 @@ mv facebook_combined.txt facebook_combined.el
 
 wget https://snap.stanford.edu/data/soc-LiveJournal1.txt.gz
 gunzip soc-LiveJournal1.txt.gz
-mv soc-LiveJournal1.txt soc-LiveJournal1.el
+sed '/^#/d' soc-LiveJournal1.txt > soc-LiveJournal1-cleaned.el # Remove comments from the file as they break the benchmark
 
 # Disable systemd service that waits for network to be online
 systemctl disable systemd-networkd-wait-online.service
