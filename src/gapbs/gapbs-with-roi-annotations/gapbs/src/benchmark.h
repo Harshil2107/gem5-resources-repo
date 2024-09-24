@@ -107,11 +107,11 @@ void BenchmarkKernel(const CLApp &cli, const GraphT_ &g,
     #ifdef M5ANNOTATION
       map_m5_mem();
       std::cout<<"---------------------roi begin--------------------" << '\n';
-      m5_work_begin(0,0); //#pass iter to the param representing work item number
+      m5_work_begin_addr(0,0); //#pass iter to the param representing work item number
     #endif
     auto result = kernel(g);
     #ifdef M5ANNOTATION
-      m5_work_end(0,0);
+      m5_work_end_addr(0,0);
       std::cout<<"---------------------roi end--------------------" << '\n';
     #endif
     trial_timer.Stop();
