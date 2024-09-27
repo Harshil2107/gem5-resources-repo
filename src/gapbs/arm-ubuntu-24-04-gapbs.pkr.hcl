@@ -36,8 +36,8 @@ source "qemu" "initialize" {
   format           = "raw"
   headless         = "true"
   disk_image       = "true"
-  iso_checksum     = "sha256:885a9ec6880fff35bfb71892e71272e8e1e32828d3158f264dc93481bd23f44b"
-  iso_urls         = ["./arm-ubuntu"]
+  iso_checksum     = "sha256:eb94422a3908c6c5183c03666b278b6e8bcfbde04da3d7c3bb5374bc82e0ef48"
+  iso_urls         = ["./arm-ubuntu-24.04-20240823"]
   memory           = "8192"
   output_directory = "arm-disk-image-24-04"
   qemu_binary      = "/usr/bin/qemu-system-aarch64"
