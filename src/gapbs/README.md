@@ -14,22 +14,6 @@ This document provides instructions to create a GAP Benchmark Suite (GAPBS) disk
 
 A pre-built disk image, for X86, can be found, gzipped, here: <add link>
 
-## What's on the disk?
-
-- username: gem5
-- password: 12345
-
-- The `gem5-bridge`(m5) utility is installed in `/usr/local/bin/gem5-bridge`.
-- `libm5` is installed in `/usr/local/lib/`.
-- The headers for `libm5` are installed in `/usr/local/include/gem5-bridge`.
-- `gapbs` benchmark sutie with ROI annotations
-
-Thus, you should be able to build packages on the disk and easily link to the gem5-bridge library.
-
-The disk has network disabled by default to improve boot time in gem5.
-
-If you want to enable networking, you need to modify the disk image and move the file `/etc/netplan/00-installer-config.yaml.bak` to `/etc/netplan/00-installer-config.yaml`.
-
 ## Building the Disk Image
 
 Assuming that you are in the `src/gapbs/` directory, run
@@ -40,9 +24,26 @@ Assuming that you are in the `src/gapbs/` directory, run
 
 After this process succeeds, the disk image can be found on the `src/gapbs/disk-image-ubuntu-24-04`.
 
-This gapbs image uses the prebuilt ubuntu 24.04 image as a base image. The gapbs image also throws the same exit events as the base image.
+This gapbs image uses the prebuilt ubuntu 24.04 image as a base image. The gapbs image also throws the same exit events as the base image. For more details on the exit events, check out the [Boot Sequences](#boot-sequences) section.
 
-Each benchmark also has its regions of intrests annotated and they throw a `gem5-bridge workbegin` and `gem5-bridge workend` exit event.
+Each benchmark also has its regions of interest annotated and they throw a `gem5-bridge workbegin` and `gem5-bridge workend` exit event.
+
+## What's on the disk?
+
+- username: gem5
+- password: 12345
+
+- The `gem5-bridge`(m5) utility is installed in `/usr/local/bin/gem5-bridge`.
+- `libm5` is installed in `/usr/local/lib/`.
+- The headers for `libm5` are installed in `/usr/local/include/gem5-bridge`. For more information on m5, read the following [documentation](https://www.gem5.org/documentation/general_docs/m5ops/).
+- `gapbs` benchmark suite with ROI annotations. The built binaries are in the path `/home/gem5/gapbs/`.
+- Two real graphs: `soc-LiveJournal1` and `facebook_combined`
+
+Thus, you should be able to build packages on the disk and easily link to the gem5-bridge library.
+
+The disk has network disabled by default to improve boot time in gem5.
+
+If you want to enable networking, you need to modify the disk image and move the file `/etc/netplan/00-installer-config.yaml.bak` to `/etc/netplan/00-installer-config.yaml`.
 
 ## Init Process and Exit Events
 
