@@ -11,5 +11,10 @@ if [ ! -f ./packer ]; then
     rm packer_${PACKER_VERSION}_linux_amd64.zip;
 fi
 
+if [ ! -f riscv-ubuntu-24-04 ]; then
+wget https://storage.googleapis.com/dist.gem5.org/dist/develop/images/riscv/ubuntu-24-04/riscv-ubuntu-24-04.gz;
+gunzip riscv-ubuntu-24-04.gz;
+fi
+
 ./packer init riscv-ubuntu-24-04-gapbs.pkr.hcl
 ./packer build riscv-ubuntu-24-04-gapbs.pkr.hcl

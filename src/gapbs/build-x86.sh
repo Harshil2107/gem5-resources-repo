@@ -11,8 +11,11 @@ if [ ! -f ./packer ]; then
     rm packer_${PACKER_VERSION}_linux_amd64.zip;
 fi
 
-# wget https://storage.googleapis.com/dist.gem5.org/dist/develop/images/x86/ubuntu-24-04/x86-ubuntu-24-04.gz
-# gunzip x86-ubuntu-24-04.gz
+if [ ! -f ./x86-ubuntu-24-04 ]; then
+    wget https://storage.googleapis.com/dist.gem5.org/dist/develop/images/x86/ubuntu-24-04/x86-ubuntu-24-04.gz
+    gunzip x86-ubuntu-24-04.gz
+fi
+
 
 ./packer init x86-ubuntu-24-04-gapbs.pkr.hcl
 ./packer build x86-ubuntu-24-04-gapbs.pkr.hcl

@@ -28,13 +28,13 @@ source "qemu" "initialize" {
   format           = "raw"
   headless         = "true"
   disk_image       = "true"
-  boot_command = ["<wait45>",
-                  "gem5<enter><wait>",
-                  "12345<enter><wait>",
-                  "sudo mount -o remount,rw /<enter><wait>", // explain why 
-                  "12345<enter><wait>",
-                  "sudo mv /etc/netplan/50-cloud-init.yaml.bak /etc/netplan/50-cloud-init.yaml<enter><wait>",
-                  "sudo netplan apply<enter><wait>",
+  boot_command = ["<wait90>",
+                  "gem5<enter><wait2>",
+                  "12345<enter><wait2>",
+                  "sudo mount -o remount,rw /<enter><wait2>", // remounting system as read-write as qemu does not like that we have m5 exits in the boot process so it mounts system as read ony.
+                  "12345<enter><wait2>",
+                  "sudo mv /etc/netplan/50-cloud-init.yaml.bak /etc/netplan/50-cloud-init.yaml<enter><wait2>",
+                  "sudo netplan apply<enter><wait2>",
                   "<wait>"
                 ]
   iso_checksum     = "sha256:c72784107683f1b1d703fa4fef6d3f52ecf95c9c930a77931f8ab69465869fc1"
