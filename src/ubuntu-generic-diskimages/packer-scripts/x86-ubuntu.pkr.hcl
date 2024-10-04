@@ -39,7 +39,7 @@ locals {
       output_dir    = "x86-disk-image-22-04"
     }
     "24.04" = {
-      iso_url       = "https://releases.ubuntu.com/releases/noble/ubuntu-24.04-live-server-amd64.iso"
+      iso_url       = "https://old-releases.ubuntu.com/releases/noble/ubuntu-24.04-live-server-amd64.iso"
       iso_checksum  = "sha256:8762f7e74e4d64d72fceb5f70682e6b069932deedb4949c6975d0f0fe0a91be3"
       output_dir    = "x86-disk-image-24-04"
     }
