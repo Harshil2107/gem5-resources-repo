@@ -26,7 +26,7 @@ if [[ "$ubuntu_version" == "22.04" ]]; then
 fi
 
 if [[ "$ubuntu_version" == "24.04" ]]; then
-    wget https://cdimage.ubuntu.com/releases/noble/release/ubuntu-24.04-preinstalled-server-riscv64.img.xz
+    wget https://old-releases.ubuntu.com/releases/noble/ubuntu-24.04-preinstalled-server-riscv64.img.xz
     unxz ubuntu-24.04-preinstalled-server-riscv64.img.xz
 fi
 
