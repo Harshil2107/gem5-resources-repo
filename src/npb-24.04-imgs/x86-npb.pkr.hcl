@@ -57,6 +57,12 @@ build {
     source      = "npb-with-roi/NPB/NPB3.4-OMP"
     destination = "/home/gem5/"
   }
+
+  provisioner "file" {
+    source      = "make-files/x86/make.def"
+    destination = "/home/gem5/NPB3.4-OMP/config/"
+  }
+
   provisioner "shell" {
     execute_command = "echo '${var.ssh_password}' | {{ .Vars }} sudo -E -S bash '{{ .Path }}'"
     scripts         = ["scripts/post-installation.sh"]
