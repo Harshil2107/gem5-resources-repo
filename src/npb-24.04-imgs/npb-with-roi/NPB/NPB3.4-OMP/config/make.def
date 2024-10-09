@@ -111,7 +111,7 @@ C_INC =
 # _LARGEFILE64_SOURCE - are standard compiler flags which allow to work with
 # files larger than 2GB.
 #---------------------------------------------------------------------------
-CFLAGS	= -O3 -fopenmp -no-pie -DM5_ANNOTATION
+CFLAGS	= -O3 -fopenmp -mcmodel=medium -no-pie -DM5_ANNOTATION
 
 #---------------------------------------------------------------------------
 # Global *link time* flags. Flags for increasing maximum executable
