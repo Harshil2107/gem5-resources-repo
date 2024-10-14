@@ -68,7 +68,7 @@ build {
   }
 
   provisioner "file" {
-    source      = "make-files/ARM/make.def"
+    source      = "makefiles/ARM/make.def"
     destination = "/home/gem5/NPB3.4-OMP/config/"
   }
 
