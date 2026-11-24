@@ -5,6 +5,17 @@
 
 echo 'Post Installation Started'
 
+# Ensure the UBUNTU_VERSION and KERNEL_VERSION environment variables are set
+if [ -z "$UBUNTU_VERSION" ]; then
+  echo "Error: UBUNTU_VERSION environment variable is not set."
+  exit 1
+fi
+
+if [ -z "$KERNEL_VERSION" ]; then
+  echo "Error: KERNEL_VERSION environment variable is not set."
+  exit 1
+fi
+
 echo 'installing packages'
 apt-get update
 apt-get install -y scons
@@ -21,9 +32,9 @@ systemctl mask boot-efi.mount
 systemctl daemon-reload
 
 
-mv /home/gem5/6.8.12 /lib/modules/6.8.12
-depmod --quick -a 6.8.12
-update-initramfs -u -k 6.8.12
+mv /home/gem5/${KERNEL_VERSION} /lib/modules/${KERNEL_VERSION}
+depmod --quick -a ${KERNEL_VERSION}
+update-initramfs -u -k ${KERNEL_VERSION}
 
 # Giving execute permissions to the after_boot.sh script
 chmod 4577 /home/gem5/after_boot.sh
@@ -81,7 +92,18 @@ echo "Done building and installing gem5-bridge (m5) and libm5"
 # Disable network by default
 echo "Disabling network by default"
 echo "See README.md for instructions on how to enable network"
-mv /etc/netplan/50-cloud-init.yaml /etc/netplan/50-cloud-init.yaml.bak
+
+# The netplan config file name depends on the Ubuntu version.
+if [ "${UBUNTU_VERSION}" = "22.04" ]; then
+    mv /etc/netplan/00-installer-config.yaml /etc/netplan/00-installer-config.yaml.bak
+elif [ "${UBUNTU_VERSION}" = "24.04" ]; then
+    mv /etc/netplan/50-cloud-init.yaml /etc/netplan/50-cloud-init.yaml.bak
+elif [ "${UBUNTU_VERSION}" = "26.04" ]; then
+    mv /etc/netplan/50-cloud-init.yaml /etc/netplan/50-cloud-init.yaml.bak
+else
+    echo "Error: Unsupported UBUNTU_VERSION '${UBUNTU_VERSION}'."
+    exit 1
+fi
 
 # Disable systemd service that waits for network to be online
 systemctl disable systemd-networkd-wait-online.service
@@ -92,5 +114,32 @@ echo "Disabling cloud-init services"
 # Disable systemd targets for cloud-init that wait for its completion
 systemctl disable cloud-init.target
 systemctl mask cloud-init.target
+
+# The riscv image starts from Ubuntu's preinstalled server image, which keeps
+# services that the x86/arm minimal installs don't have or disable (see
+# ubuntu-generic-diskimages/scripts/disable-systemd-services-arm.sh). They
+# are not needed in gem5 and slow the simulated boot down a lot. Not every
+# unit exists in every Ubuntu version, so ignore the ones that are missing.
+echo "Disabling systemd services not needed in gem5"
+for unit in \
+    multipathd.service multipathd.socket \
+    snapd.service snapd.socket snapd.seeded.service snapd.apparmor.service \
+    lxd-installer.socket \
+    apt-daily.timer apt-daily-upgrade.timer unattended-upgrades.service \
+    fstrim.timer \
+    accounts-daemon.service \
+    lvm2-monitor.service \
+    apparmor.service \
+    udisks2.service \
+    chrony.service systemd-timesyncd.service \
+    rsyslog.service \
+    networkd-dispatcher.service; do
+    systemctl disable "$unit" || true
+done
+for unit in ModemManager.service \
+    plymouth-start.service plymouth-quit.service plymouth-read-write.service; do
+    systemctl mask "$unit" || true
+done
+systemctl set-default multi-user.target
 
 echo "Post Installation Done"

@@ -1,2 +1,7 @@
 disk-image-ubuntu-24-04/
 disk-image-ubuntu-26-04/
+disk-image-gapbs-ubuntu-*/
+riscv-disk-image-ubuntu-*/
+arm-disk-image-*/
+files/
+riscv-ubuntu-24.04-*

@@ -5,6 +5,14 @@
 
 # install build-essential (gcc and g++ included) and gfortran
 
+if [ "$(uname -m)" = "riscv64" ]; then
+    # The riscv root filesystem (partition 1) sits at the end of the disk, so
+    # grow it to use any space added by the packer disk_size setting.
+    apt-get install -y cloud-guest-utils
+    growpart /dev/vda 1
+    resize2fs /dev/vda1
+fi
+
 #Compile NPB
 
 apt-get install -y gfortran
@@ -18,19 +26,16 @@ make suite M5_ANNOTATION=1
 echo "Disabling network by default"
 echo "See README.md for instructions on how to enable network"
 
-# Ensure the UBUNTU_VERSION environment variable is set
-if [ -z "$UBUNTU_VERSION" ]; then
-  echo "Error: UBUNTU_VERSION environment variable is not set."
-  exit 1
-fi
-
-# The netplan config file name depends on the Ubuntu version.
-if [ "${UBUNTU_VERSION}" = "24.04" ]; then
+# The netplan config file name depends on how the base image was installed,
+# not just the Ubuntu version: images installed with the live-server
+# autoinstaller (x86 and arm) use 00-installer-config.yaml, while the riscv
+# preinstalled images and the 24.04 images use 50-cloud-init.yaml.
+if [ -f /etc/netplan/50-cloud-init.yaml ]; then
     mv /etc/netplan/50-cloud-init.yaml /etc/netplan/50-cloud-init.yaml.bak
-elif [ "${UBUNTU_VERSION}" = "26.04" ]; then
+elif [ -f /etc/netplan/00-installer-config.yaml ]; then
     mv /etc/netplan/00-installer-config.yaml /etc/netplan/00-installer-config.yaml.bak
 else
-    echo "Error: Unsupported UBUNTU_VERSION '${UBUNTU_VERSION}'."
+    echo "Error: No netplan config found to disable (Ubuntu ${UBUNTU_VERSION})."
     exit 1
 fi
 

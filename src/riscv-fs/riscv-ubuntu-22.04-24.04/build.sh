@@ -14,11 +14,17 @@ fi
 # Check if the Ubuntu version variable is provided
 if [ -z "$1" ]; then
     echo "Usage: $0 <ubuntu_version>"
-    echo "Example: $0 22.04 or $0 24.04"
+    echo "Example: $0 22.04 or $0 24.04 or $0 26.04"
     exit 1
 fi
 
 ubuntu_version="$1"
+
+# Check if the specified Ubuntu version is valid
+if [[ "$ubuntu_version" != "22.04" && "$ubuntu_version" != "24.04" && "$ubuntu_version" != "26.04" ]]; then
+    echo "Error: Invalid Ubuntu version '$ubuntu_version'. Must be '22.04', '24.04', or '26.04'."
+    exit 1
+fi
 
 if [[ "$ubuntu_version" == "22.04" ]]; then
     if [ ! -f ./ubuntu-22.04.3-preinstalled-server-riscv64+unmatched.img ]; then
@@ -31,6 +37,15 @@ if [[ "$ubuntu_version" == "24.04" ]]; then
     if [ ! -f ./ubuntu-24.04-preinstalled-server-riscv64.img ]; then
         wget https://old-releases.ubuntu.com/releases/noble/ubuntu-24.04-preinstalled-server-riscv64.img.xz
         unxz ubuntu-24.04-preinstalled-server-riscv64.img.xz
+    fi
+fi
+
+if [[ "$ubuntu_version" == "26.04" ]]; then
+    # TODO: Fill in the actual base disk image download URL for Ubuntu
+    # 26.04 once it is available.
+    if [ ! -f ./ubuntu-26.04.1-preinstalled-server-riscv64.img ]; then
+        wget https://cdimage.ubuntu.com/ubuntu/releases/26.04.1/release/ubuntu-26.04.1-preinstalled-server-riscv64.img.xz
+        unxz ubuntu-26.04.1-preinstalled-server-riscv64.img.xz
     fi
 fi
 

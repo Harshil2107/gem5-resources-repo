@@ -15,7 +15,7 @@ This document provides instructions to create the "riscv-ubuntu" image. This ima
 
 ## Disk Image
 
-First, run `make-riscv-kernel.sh` and pass either `22.04` or `24.04` as an argument. Next, run `./build.sh` and pass either `22.04` or `24.04` in the `riscv-ubuntu-22.04-24.04` directory to build the disk image.
+First, run `make-riscv-kernel.sh` and pass `22.04`, `24.04`, or `26.04` as an argument. Next, run `./build.sh` and pass `22.04`, `24.04`, or `26.04` in the `riscv-ubuntu-22.04-24.04` directory to build the disk image.
 
 Note: This can take a while to run.
 You will see `qemu.initialize: Waiting for SSH to become available...` while the installation is running.

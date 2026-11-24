@@ -5,3 +5,7 @@ x86-disk-image-22-04/
 x86-disk-image-24-04/
 arm-disk-image-22-04/
 arm-disk-image-24-04/
+x86-disk-image-26-04/
+arm-disk-image-26-04/
+files/flash0.img
+kernel-and-modules/*/my-*-kernel/

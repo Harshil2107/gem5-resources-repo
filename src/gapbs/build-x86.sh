@@ -33,13 +33,17 @@ if [ "$ubuntu_version" = "24.04" ]; then
     disk_image_file="x86-ubuntu-24.04-20250515"
     disk_image_url="https://dist.gem5.org/dist/develop/images/x86/ubuntu-24-04/x86-ubuntu-24.04-20250515.gz"
 elif [ "$ubuntu_version" = "26.04" ]; then
-    # TODO: Fill in the actual base disk image file name and download URL
-    # for Ubuntu 26.04 once it is available.
-    disk_image_file="x86-ubuntu-26.04-TBD"
-    disk_image_url="TBD"
+    # TODO: Download the published x86 26.04 base image once it is uploaded
+    # to gem5 resources. Until then, build it with
+    # src/ubuntu-generic-diskimages/build-x86.sh 26.04.
+    if [ ! -f ../ubuntu-generic-diskimages/x86-disk-image-26-04/x86-ubuntu ]; then
+        echo "Error: Build the x86 26.04 base image first with"
+        echo "src/ubuntu-generic-diskimages/build-x86.sh 26.04"
+        exit 1
+    fi
 fi
 
-if [ ! -f "./${disk_image_file}" ]; then
+if [ "$ubuntu_version" = "24.04" ] && [ ! -f "./${disk_image_file}" ]; then
     wget "${disk_image_url}"
     gunzip "${disk_image_file}.gz"
 fi

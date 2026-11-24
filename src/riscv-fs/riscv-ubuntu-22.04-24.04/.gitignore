@@ -2,3 +2,8 @@
 **packer_*.zip
 packer_cache/
 disk-image/
+disk-image-24.04/
+disk-image-26.04/
+my-riscv-*-kernel/
+ubuntu-*-preinstalled-server-riscv64.img*
+my-riscv*

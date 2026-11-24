@@ -40,10 +40,10 @@ locals {
       netplan_restore_cmd = "sudo mv /etc/netplan/50-cloud-init.yaml.bak /etc/netplan/50-cloud-init.yaml"
     }
     "26.04" = {
-      # TODO: Fill in the actual base disk image file name, checksum, and
-      # netplan restore command for Ubuntu 26.04 once it is available.
-       disk_image_file     = "x86-ubuntu"
-      iso_checksum        = "sha256:"
+      # TODO: Point this at the published x86 26.04 base image once it is
+      # uploaded to gem5 resources.
+      disk_image_file     = "../ubuntu-generic-diskimages/x86-disk-image-26-04/x86-ubuntu"
+      iso_checksum        = "sha256:7cb34299123875a87fa494f31690fdbea25084f46736cb51b03dc8e8269b9e06"
       output_dir          = "disk-image-gapbs-ubuntu-26-04"
       netplan_restore_cmd = "sudo mv /etc/netplan/00-installer-config.yaml.bak /etc/netplan/00-installer-config.yaml"
     }

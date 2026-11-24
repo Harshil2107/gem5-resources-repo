@@ -56,4 +56,11 @@ ln -s /usr/local/bin/gem5-bridge /usr/bin/gem5-bridge
 
 # delete the git repo for gem5
 rm -rf gem5
+
+# The steps above don't stop on errors, so make sure the build fails instead
+# of producing an image without gem5-bridge.
+if [ ! -x /usr/local/bin/gem5-bridge ] || [ ! -f /usr/local/lib/libm5.a ]; then
+    echo "Error: gem5-bridge (m5) or libm5 was not installed."
+    exit 1
+fi
 echo "Done building and installing gem5-bridge (m5) and libm5."

@@ -26,8 +26,8 @@ variable "ubuntu_version" {
   type    = string
   default = "24.04"
   validation {
-    condition     = contains(["22.04", "24.04"], var.ubuntu_version)
-    error_message = "Ubuntu version must be either 22.04 or 24.04."
+    condition     = contains(["22.04", "24.04", "26.04"], var.ubuntu_version)
+    error_message = "Ubuntu version must be either 22.04, 24.04, or 26.04."
   }
 }
 
@@ -39,6 +39,7 @@ locals {
       output_dir    = "arm-disk-image-22-04"
       http_directory = "http/arm-22-04"
       modules_dir = "kernel-and-modules/arm-ubuntu-22.04/my-arm-5.15.168-kernel/5.15.168"
+      disk_size     = "4600"
     }
     "24.04" = {
       iso_url       = "https://cdimage.ubuntu.com/releases/24.04/release/ubuntu-24.04-live-server-arm64.iso"
@@ -46,6 +47,15 @@ locals {
       output_dir    = "arm-disk-image-24-04"
       http_directory = "http/arm-24-04"
       modules_dir = "kernel-and-modules/arm-ubuntu-24.04/my-arm-6.8.12-kernel/6.8.12"
+      disk_size     = "4600"
+    }
+    "26.04" = {
+      iso_url       = "https://cdimage.ubuntu.com/releases/26.04/release/ubuntu-26.04.1-live-server-arm64.iso"
+      iso_checksum  = "sha256:af78753c94b924c85c4964c670692a853f7c80299a4064e317edad95462e3168"
+      output_dir    = "arm-disk-image-26-04"
+      http_directory = "http/arm-26-04"
+      modules_dir = "kernel-and-modules/arm-ubuntu-26.04/my-arm-7.0.22-kernel/7.0.14"
+      disk_size     = "10000"
     }
   }
 }
@@ -80,6 +90,12 @@ locals {
   ])
 
   qemuargs = var.use_kvm == "true" ? local.qemuargs_kvm : local.qemuargs_no_kvm
+
+  # Without KVM the guest is emulated. The GRUB menu shows from ~10s to ~40s
+  # after start, so type "c" in the middle of that window, and give the
+  # much slower install more time before SSH comes up.
+  boot_wait        = var.use_kvm == "true" ? "10s" : "20s"
+  ssh_wait_timeout = var.use_kvm == "true" ? "60m" : "300m"
 }
 
 source "qemu" "initialize" {
@@ -93,8 +109,9 @@ source "qemu" "initialize" {
                       "<enter>",
                       "<wait>"
                       ]
+  boot_wait        = local.boot_wait
   cpus             = "4"
-  disk_size        = "4600"
+  disk_size        = local.iso_data[var.ubuntu_version].disk_size
   format           = "raw"
   headless         = "true"
   http_directory   = local.iso_data[var.ubuntu_version].http_directory
@@ -107,7 +124,7 @@ source "qemu" "initialize" {
   shutdown_command = "echo '${var.ssh_password}'|sudo -S shutdown -P now"
   ssh_password     = "${var.ssh_password}"
   ssh_username     = "${var.ssh_username}"
-  ssh_wait_timeout = "60m"
+  ssh_wait_timeout = local.ssh_wait_timeout
   vm_name          = "${var.image_name}"
   ssh_handshake_attempts = "1000"
 }
@@ -141,7 +158,7 @@ build {
   }
 
   provisioner "shell" {
-    execute_command = "echo '${var.ssh_password}' | {{ .Vars }} sudo -E -S bash '{{ .Path }}'"
+    execute_command = "echo '${var.ssh_password}' | {{ .Vars }} sudo --preserve-env=ISA,UBUNTU_VERSION -S bash '{{ .Path }}'"
     scripts         = ["scripts/install-common-packages.sh",
                        "scripts/increase-system-entropy-for-arm-disk.sh",
                        "scripts/update-modules-arm-${var.ubuntu_version}.sh",
@@ -149,17 +166,19 @@ build {
                        "scripts/install-gem5-bridge.sh",
                        "scripts/install-user-packages.sh",
                       ]
-    environment_vars = ["ISA=arm64"]
+    environment_vars = ["ISA=arm64", "UBUNTU_VERSION=${var.ubuntu_version}"]
     expect_disconnect = true
   }
 
   provisioner "shell" {
     scripts =  ["scripts/install-user-benchmarks.sh"]
+    environment_vars = ["UBUNTU_VERSION=${var.ubuntu_version}"]
   }
 
   provisioner "shell" {
-    execute_command = "echo '${var.ssh_password}' | {{ .Vars }} sudo -E -S bash '{{ .Path }}'"
+    execute_command = "echo '${var.ssh_password}' | {{ .Vars }} sudo --preserve-env=ISA,UBUNTU_VERSION -S bash '{{ .Path }}'"
     scripts = ["scripts/disable-systemd-services-arm.sh","scripts/disable-network.sh"]
+    environment_vars = ["UBUNTU_VERSION=${var.ubuntu_version}"]
     expect_disconnect = true
   }
 

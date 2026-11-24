@@ -12,7 +12,7 @@ if [ -z "$UBUNTU_VERSION" ]; then
 fi
 
 
-if [ "${UBUNTU_VERSION}" = "22.04" || "${UBUNTU_VERSION}" = "24.04"]; then
+if [ "${UBUNTU_VERSION}" = "22.04" ] || [ "${UBUNTU_VERSION}" = "24.04" ]; then
     sudo apt -y install "linux-headers-$(uname -r)" "linux-modules-extra-$(uname -r)"
 elif [ "${UBUNTU_VERSION}" = "26.04" ]; then
     sudo apt -y install "linux-headers-$(uname -r)"

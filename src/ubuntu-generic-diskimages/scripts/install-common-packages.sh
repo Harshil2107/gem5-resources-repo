@@ -14,6 +14,21 @@ mv serial-getty@.service-override.conf /etc/systemd/system/serial-getty@.service
 # file during ubuntu autoinstall. The reason is that sometimes
 # the package install fails. This method is more reliable.
 
+# On the first boot cloud-init and apt-daily/unattended-upgrades may still be
+# running apt, and apt-get fails right away if another process holds the
+# dpkg lock. This is much more likely when the guest is emulated (no KVM),
+# so wait for them to finish first.
+# Match the upgrade itself (/usr/bin/unattended-upgrade), not the
+# unattended-upgrade-shutdown helper that runs for the whole uptime. Give up
+# after an hour so a stuck process can't hang the build.
+cloud-init status --wait > /dev/null 2>&1 || true
+for i in $(seq 360); do
+    pgrep -x 'apt|apt-get|dpkg' > /dev/null ||
+        pgrep -f '/usr/bin/unattended-upgrade( |$)' > /dev/null || break
+    echo "Waiting for another apt/dpkg process to finish..."
+    sleep 10
+done
+
 echo "Installing packages required for gem5-bridge (m5) and libm5."
 apt-get update
 apt-get install -y scons
